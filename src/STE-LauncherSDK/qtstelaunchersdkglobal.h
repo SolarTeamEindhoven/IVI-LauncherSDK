@@ -1,0 +1,22 @@
+#ifndef QTSTELAUNCHERSDKGLOBAL_H
+#define QTSTELAUNCHERSDKGLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+QT_BEGIN_NAMESPACE
+
+#ifndef Q_STE_LAUNCHERSDK_EXPORT
+#  ifndef QT_STATIC
+#    if defined(QT_BUILD_STE_LAUNCHERSDK_LIB)
+#      define Q_STE_LAUNCHERSDK_EXPORT Q_DECL_EXPORT
+#    else
+#      define Q_STE_LAUNCHERSDK_EXPORT Q_DECL_IMPORT
+#    endif
+#  else
+#    define Q_STE_LAUNCHERSDK_EXPORT
+#  endif
+#endif
+
+QT_END_NAMESPACE
+
+#endif // QTSTELAUNCHERSDKGLOBAL_H
