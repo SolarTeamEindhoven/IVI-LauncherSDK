@@ -5,12 +5,15 @@
 #include <QSGNode>
 #include <QSGSimpleRectNode>
 #include <QQuickWindow>
+#include <STEAppContainer>
+#include <STEApp>
 
 LAYRController::LAYRController(QQuickItem* parent)
     : QQuickItem(parent)
-    , leftButton("LAYR_left")
-    , middleButton("LAYR_middle")
-    , rightButton("LAYR_right")
+    , activeApp(nullptr)
+    , leftButton(this, "LAYR_left")
+    , middleButton(this, "LAYR_middle")
+    , rightButton(this, "LAYR_right")
     , p(.4f)
     , t(0)
 {
@@ -22,8 +25,13 @@ LAYRController::LAYRController(QQuickItem* parent)
 
     connect(this, &QQuickItem::windowChanged, this, &LAYRController::updateWindowSize);
     updateWindowSize();
+}
 
-    leftButton.item()->setParentItem(this);
+void LAYRController::setActiveApp(STEAppInstance* newActiveAppInstance)
+{
+    leftButton.setActiveApp(newActiveAppInstance);
+    middleButton.setActiveApp(newActiveAppInstance);
+    rightButton.setActiveApp(newActiveAppInstance);
 }
 
 QSGNode* LAYRController::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*)
@@ -44,7 +52,7 @@ QSGNode* LAYRController::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*)
 void LAYRController::updateLAYR()
 {
     t += .01f;
-    p = .4f + .1f * std::sin( t * (.25f*2.f*3.141592f) ); // 10% amplitude @ 0.25 Hz
+    p = .4f + .3f * std::sin( t * (.25f*2.f*3.141592f) ); // 30% amplitude @ 0.25 Hz
 
     updatePositions();
 }
@@ -69,6 +77,36 @@ void LAYRController::updateWindowSize()
 void LAYRController::updatePositions()
 {
     int y = p * windowSize.height();
+
+    {
+        STEAppInstance* newActiveApp = nullptr;
+
+        foreach(STEAppContainer* appContainer, STEAppContainer::getSTEAppContainerList())
+        {
+            qreal posY = appContainer->y();
+            if(posY <= y && y <= posY + appContainer->height())
+            {
+                STEApp* app = appContainer->getApp();
+
+                if(app == nullptr)
+                    continue;
+
+                const QList<STEAppInstance*>& instances = app->getInstances();
+
+                if(instances.size() <= 0)
+                    continue;
+
+                newActiveApp = instances.first(); // TODO: First is not the correct handling....
+                break;
+            }
+        }
+
+        if(activeApp != newActiveApp)
+        {
+            changeActiveApp(newActiveApp);
+            activeApp = newActiveApp;
+        }
+    }
 
     leftButton.setPosition(QPointF(windowSize.width()/4, y + height()/2));
     middleButton.setPosition(QPointF(2*windowSize.width()/4, y + height()/2));

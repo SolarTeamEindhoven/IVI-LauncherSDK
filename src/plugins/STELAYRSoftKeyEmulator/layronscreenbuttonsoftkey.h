@@ -14,7 +14,7 @@ class LAYROnscreenButtonSoftKey : public STESoftKey
     Q_OBJECT
 
 public:
-    explicit LAYROnscreenButtonSoftKey(QString hint, QObject* parent = 0);
+    explicit LAYROnscreenButtonSoftKey(QQuickItem* parentItem, QString hint, QObject* parent = 0);
 
     virtual QString getHint() const Q_DECL_OVERRIDE;
     virtual bool isVisual() const Q_DECL_OVERRIDE;
@@ -22,18 +22,17 @@ public:
     virtual void setSurface(STEAppInstance* appInstance, QWaylandSurface* newSurface) Q_DECL_OVERRIDE;
 
     void setPosition(QPointF pos);
-    QQuickItem* item() {return &waylandQuickItem;}
+    void setActiveApp(STEAppInstance* appInstance);
 
 private:
-    QWaylandQuickItem waylandQuickItem;
+    QQuickItem* parentItem;
     QPointF pos;
     QString hint;
     QTimer timer;
-    QMap<STEAppInstance*, QWaylandSurface*> appSurfacesList;
+    QMap<STEAppInstance*, QWaylandQuickItem*> appSurfacesList;
     STEAppInstance* activeAppInstance;
 
     void updateLocation();
-    void updateActiveSurface();
 };
 
 #endif // LAYRONSCREENBUTTONSOFTKEY_H

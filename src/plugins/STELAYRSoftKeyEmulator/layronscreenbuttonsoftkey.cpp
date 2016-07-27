@@ -13,8 +13,9 @@
 
 #include <QOpenGLFunctions>
 
-LAYROnscreenButtonSoftKey::LAYROnscreenButtonSoftKey(QString hint, QObject* parent)
-    : pos(0,0)
+LAYROnscreenButtonSoftKey::LAYROnscreenButtonSoftKey(QQuickItem* parentItem, QString hint, QObject* parent)
+    : parentItem(parentItem)
+    , pos(0,0)
     , STESoftKey(parent)
     , hint(hint)
     , activeAppInstance(nullptr)
@@ -41,8 +42,18 @@ QSize LAYROnscreenButtonSoftKey::getHintSize() const
 
 void LAYROnscreenButtonSoftKey::setSurface(STEAppInstance* appInstance, QWaylandSurface* surface)
 {
-    appSurfacesList.insert(appInstance, surface);
-    updateActiveSurface();
+    auto it = appSurfacesList.find(appInstance);
+
+    if(it == appSurfacesList.end())
+    {
+        QWaylandQuickItem* waylandQuickItem = new QWaylandQuickItem();
+        waylandQuickItem->setParentItem(parentItem);
+        waylandQuickItem->setVisible(false);
+        it = appSurfacesList.insert(appInstance, waylandQuickItem);
+    }
+
+    it.value()->setSurface(surface);
+    setActiveApp(activeAppInstance);
 }
 
 void LAYROnscreenButtonSoftKey::setPosition(QPointF position)
@@ -51,46 +62,60 @@ void LAYROnscreenButtonSoftKey::setPosition(QPointF position)
     updateLocation();
 }
 
-void LAYROnscreenButtonSoftKey::updateLocation()
+void LAYROnscreenButtonSoftKey::setActiveApp(STEAppInstance* newActiveAppInstance)
 {
-    QWaylandSurface* surface = waylandQuickItem.surface();
-
-    QPointF position = pos;
-
-    if(surface != nullptr)
-        position = QPointF(
-                    position.x() - static_cast<float>(surface->size().width()) / 2.f,
-                    position.y() - static_cast<float>(surface->size().height()) / 2.f
-                    );
-
-    waylandQuickItem.setPosition(position);
-}
-
-void LAYROnscreenButtonSoftKey::updateActiveSurface()
-{
-    STEAppInstance* newActiveAppInstance = (0 < appSurfacesList.size()) ? appSurfacesList.begin().key() : nullptr; // TODO: Use actual active application instead of first available one...
-
     if(newActiveAppInstance != activeAppInstance)
     {
-        if(waylandQuickItem.surface() != nullptr)
-            disconnect(waylandQuickItem.surface(), &QWaylandSurface::sizeChanged, this, &LAYROnscreenButtonSoftKey::updateLocation);
-
-        if(newActiveAppInstance == nullptr)
+        if(activeAppInstance != nullptr)
         {
-            waylandQuickItem.setSurface(nullptr);
+            QWaylandQuickItem* waylandQuickItem = appSurfacesList[activeAppInstance];
+            if(waylandQuickItem->surface() != nullptr)
+                disconnect(waylandQuickItem->surface(), &QWaylandSurface::sizeChanged, this, &LAYROnscreenButtonSoftKey::updateLocation);
+            waylandQuickItem->setVisible(false);
+        }
+
+        if(newActiveAppInstance != nullptr)
+        {
+            auto it = appSurfacesList.find(newActiveAppInstance);
+
+            if(it == appSurfacesList.end())
+            {
+                activeAppInstance = nullptr;
+            }
+            else
+            {
+                activeAppInstance = newActiveAppInstance;
+                QWaylandQuickItem* waylandQuickItem = it.value();
+                if(waylandQuickItem->surface() != nullptr)
+                    connect(waylandQuickItem->surface(), &QWaylandSurface::sizeChanged, this, &LAYROnscreenButtonSoftKey::updateLocation);
+                waylandQuickItem->setVisible(true);
+            }
         }
         else
         {
-            QWaylandSurface* surface = appSurfacesList[newActiveAppInstance];
-
-            waylandQuickItem.setSurface(surface);
-
-            if(surface != nullptr)
-            {
-                connect(surface, &QWaylandSurface::sizeChanged, this, &LAYROnscreenButtonSoftKey::updateLocation);
-            }
+            activeAppInstance = nullptr;
         }
 
         updateLocation();
+    }
+}
+
+void LAYROnscreenButtonSoftKey::updateLocation()
+{
+    auto it = appSurfacesList.find(activeAppInstance);
+
+    QPointF position = pos;
+
+    if(it != appSurfacesList.end())
+    {
+        QWaylandSurface* surface = it.value()->surface();
+
+        if(surface != nullptr)
+            position = QPointF(
+                        position.x() - static_cast<float>(surface->size().width()) / 2.f,
+                        position.y() - static_cast<float>(surface->size().height()) / 2.f
+                        );
+
+        it.value()->setPosition(position);
     }
 }

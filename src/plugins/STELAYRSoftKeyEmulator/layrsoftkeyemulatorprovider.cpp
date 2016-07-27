@@ -2,6 +2,7 @@
 
 #include <QList>
 #include <QWaylandCompositor>
+#include <STEAppInstance>
 
 static QList<STESoftKey*> softKeyList;
 
@@ -20,10 +21,18 @@ QQuickItem* LAYRSoftKeyEmulatorProvider::createSoftKeyVisualization()
     return getController();
 }
 
+void LAYRSoftKeyEmulatorProvider::activeAppChanged(STEAppInstance* appInstance)
+{
+    getController()->setActiveApp(appInstance);
+}
+
 LAYRController* LAYRSoftKeyEmulatorProvider::getController()
 {
     if(controller == nullptr)
+    {
         controller = new LAYRController;
+        connect(controller, &LAYRController::changeActiveApp, this, &LAYRSoftKeyEmulatorProvider::changeActiveApp);
+    }
 
     return controller;
 }

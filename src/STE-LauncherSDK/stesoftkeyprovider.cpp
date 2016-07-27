@@ -9,3 +9,8 @@ QQuickItem* STESoftKeyProvider::createSoftKeyVisualization()
 {
     return nullptr;
 }
+
+void STESoftKeyProvider::activeAppChanged(STEAppInstance* appInstance)
+{
+    ;
+}

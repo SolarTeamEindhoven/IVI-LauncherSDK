@@ -13,6 +13,7 @@ QT_BEGIN_NAMESPACE
 class QWaylandCompositor;
 class STESoftKeyProvider;
 class STESoftKey;
+class STEAppInstance;
 
 class Q_STE_LAUNCHERSDK_EXPORT STESoftKeyManager : public QObject
 {
@@ -31,9 +32,11 @@ private:
 
     QQuickItem visualizer;
     bool pluginsLoaded;
+    QList<STESoftKeyProvider*> providers;
     QList<STESoftKey*> softkeys;
     uint32_t maxID;
 
+    void changeActiveApp(STEAppInstance* appInstance);
     void loadProviders();
 };
 

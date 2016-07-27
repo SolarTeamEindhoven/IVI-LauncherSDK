@@ -15,6 +15,7 @@ public:
 
     QList<STESoftKey*> createSoftKeys() Q_DECL_OVERRIDE;
     QQuickItem* createSoftKeyVisualization() Q_DECL_OVERRIDE;
+    void activeAppChanged(STEAppInstance* appInstance) Q_DECL_OVERRIDE;
 
 private:
     LAYRController* controller;

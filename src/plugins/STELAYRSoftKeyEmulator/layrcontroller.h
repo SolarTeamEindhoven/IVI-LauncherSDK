@@ -25,10 +25,16 @@ public:
         return list;
     }
 
+    void setActiveApp(STEAppInstance* newActiveAppInstance);
+
+signals:
+    void changeActiveApp(STEAppInstance* appInstance);
+
 protected:
     QSGNode* updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) Q_DECL_OVERRIDE;
 
 private:
+    STEAppInstance* activeApp;
     QSize windowSize;
     LAYROnscreenButtonSoftKey leftButton;
     LAYROnscreenButtonSoftKey middleButton;

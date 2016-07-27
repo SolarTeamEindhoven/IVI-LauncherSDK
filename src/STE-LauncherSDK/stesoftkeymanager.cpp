@@ -3,6 +3,7 @@
 #include <STE-LauncherSDK/STESoftKeyFactory>
 #include <STE-LauncherSDK/STESoftKeyProvider>
 #include <STE-LauncherSDK/STESoftKey>
+#include <STE-LauncherSDK/STEAppInstance>
 
 #include <QQuickItem>
 
@@ -54,6 +55,15 @@ STESoftKeyManager* STESoftKeyManager::instance()
     return managerInstance;
 }
 
+void STESoftKeyManager::changeActiveApp(STEAppInstance* appInstance)
+{
+    foreach(STESoftKeyProvider* provider, providers)
+    {
+        provider->activeAppChanged(appInstance);
+    }
+    // TODO: Inform launcher of active app change
+}
+
 void STESoftKeyManager::loadProviders()
 {
     QStringList keys = STESoftKeyFactory::keys();
@@ -76,6 +86,8 @@ void STESoftKeyManager::loadProviders()
                 continue;
 
             STESoftKeyProvider* provider = STESoftKeyFactory::create(key, QStringList());
+            providers.append(provider);
+            connect(provider, &STESoftKeyProvider::changeActiveApp, this, &STESoftKeyManager::changeActiveApp);
             softkeys.append(provider->createSoftKeys());
             QQuickItem* vis = provider->createSoftKeyVisualization();
             if(vis != nullptr)
