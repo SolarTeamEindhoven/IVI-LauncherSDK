@@ -8,6 +8,9 @@
 
 QT_BEGIN_NAMESPACE
 
+class QWaylandSurface;
+class STEAppInstance;
+
 class Q_STE_LAUNCHERSDK_EXPORT STESoftKey : public QObject
 {
     Q_OBJECT
@@ -21,9 +24,7 @@ public:
     virtual QString getHint() const = 0;
     virtual bool isVisual() const = 0;
     virtual QSize getHintSize() const = 0;
-    virtual QPoint getLocation() const = 0;
-
-    static const QList<STESoftKey*>& getSoftKeyList();
+    virtual void setSurface(STEAppInstance* appInstance, QWaylandSurface* newSurface) = 0;
 
 signals:
     void triggerStateChange(uint32_t state);

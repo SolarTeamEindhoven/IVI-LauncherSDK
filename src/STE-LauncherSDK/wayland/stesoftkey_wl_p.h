@@ -38,9 +38,6 @@ public slots:
 private:
     STESoftKey* softkey;
     QWaylandSurface* surface;
-    QWaylandQuickItem* waylandQuickItem;
-
-    void updateSurfacePosition();
 
     static QWaylandSurfaceRole surfaceRole;
 };

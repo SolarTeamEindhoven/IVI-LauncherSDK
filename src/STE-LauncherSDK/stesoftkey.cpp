@@ -1,20 +1,13 @@
 #include "stesoftkey.h"
 
-static QList<STESoftKey*> SoftKeyList;
+#include <STE-LauncherSDK/STESoftKeyManager>
 
 STESoftKey::STESoftKey(QObject* parent)
     : QObject(parent)
-    , ID(SoftKeyList.count())
+    , ID(STESoftKeyManager::instance()->getUniqueID())
 {
-    SoftKeyList.append(this);
 }
 
 STESoftKey::~STESoftKey()
 {
-    SoftKeyList.removeOne(this);
-}
-
-const QList<STESoftKey*>& STESoftKey::getSoftKeyList()
-{
-    return SoftKeyList;
 }

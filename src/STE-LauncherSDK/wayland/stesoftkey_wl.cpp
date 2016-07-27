@@ -2,7 +2,12 @@
 
 #include <QQuickView>
 #include <QWaylandQuickItem>
+#include <QWaylandClient>
+#include <QWaylandCompositor>
 #include <QDebug>
+
+#include <STE-LauncherSDK/STEAppInstance>
+#include <STE-LauncherSDK/STESoftKey>
 
 #include "stesoftkey.h"
 
@@ -14,7 +19,6 @@ STESoftKey_wl::STESoftKey_wl(STESoftKey* softkey, wl_resource* resource, QObject
     : QtWaylandServer::ste_softkey(resource)
     , surface(nullptr)
     , softkey(softkey)
-    , waylandQuickItem(nullptr)
 {
     if(!softkey->getHintSize().isNull())
         sendSizeHint(softkey->getHintSize());
@@ -27,14 +31,12 @@ STESoftKey_wl::STESoftKey_wl(STESoftKey* softkey, wl_resource* resource, QObject
 
 STESoftKey_wl::~STESoftKey_wl()
 {
-    if(waylandQuickItem != nullptr)
-        waylandQuickItem->deleteLater();
 }
 
 void STESoftKey_wl::setSurface(QWaylandSurface* newSurface)
 {
+    /*
     // TODO: Check what to do with surface: draw on screen, handle by plugin or invalidate(/ignore)
-
     if(!softkey->isVisual())
         return;
 
@@ -54,6 +56,12 @@ void STESoftKey_wl::setSurface(QWaylandSurface* newSurface)
     waylandQuickItem->setSurface(surface); // TODO: Check what happens to old surface when we lose sight here...
     updateSurfacePosition();
     connect(surface, &QWaylandSurface::sizeChanged, this, &STESoftKey_wl::updateSurfacePosition);
+    //*/
+
+    // TODO: Replace all above with just this...
+    qint64 PID = QWaylandClient::fromWlClient(newSurface->compositor(), resource()->client())->processId();
+    STEAppInstance* appInstance = STEAppInstance::fromPID(PID);
+    softkey->setSurface(appInstance, newSurface);
 }
 
 QWaylandSurfaceRole& STESoftKey_wl::role()
@@ -84,14 +92,4 @@ void STESoftKey_wl::rotated(int32_t ticks, int32_t angle)
 void STESoftKey_wl::sendSizeHint(QSize size)
 {
     send_size_hint(size.width(), size.height());
-}
-
-void STESoftKey_wl::updateSurfacePosition()
-{
-    if(waylandQuickItem == nullptr)
-        return;
-
-    qDebug() << "Settings location to:" << (softkey->getLocation().x() - waylandQuickItem->width()/2) << "|" << (softkey->getLocation().y() - waylandQuickItem->height()/2);
-    waylandQuickItem->setX(softkey->getLocation().x() - waylandQuickItem->width()/2);
-    waylandQuickItem->setY(softkey->getLocation().y() - waylandQuickItem->height()/2);
 }

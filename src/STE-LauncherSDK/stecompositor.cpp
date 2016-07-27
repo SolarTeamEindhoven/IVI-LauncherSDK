@@ -11,6 +11,7 @@
 
 #include "steappcontainer.h"
 #include "steappinstance.h"
+#include <STE-LauncherSDK/STESoftKeyManager>
 
 STECompositor::STECompositor(const QUrl& url, QObject *parent)
     : QWaylandQuickCompositor(parent)
@@ -39,6 +40,9 @@ STECompositor::STECompositor(const QUrl& url, QObject *parent)
     view.rootContext()->setContextProperty("compositor", this);
 
     view.show();
+
+    QQuickItem* softkeyVisualItem = STESoftKeyManager::instance()->item();
+    softkeyVisualItem->setParentItem(view.rootObject());
 }
 
 void STECompositor::onCreateSurface(QWaylandClient* client, uint id, int version)

@@ -3,6 +3,8 @@
 #include <QtWaylandCompositor/QWaylandCompositor>
 #include <QtWaylandCompositor/QWaylandSurface>
 
+#include <STE-LauncherSDK/STESoftKeyManager>
+
 #include <QDebug>
 
 #include "steshellsurface_wl_p.h"
@@ -37,12 +39,12 @@ void STEShell_wl::initialize()
 
 void STEShell_wl::ste_shell_create_ste_shell_surface(Resource *resource, uint32_t id, struct ::wl_resource *surface_res)
 {
-    QWaylandSurface *surface = QWaylandSurface::fromResource(surface_res);
+    QWaylandSurface* surface = QWaylandSurface::fromResource(surface_res);
 
-    wl_resource *res = wl_resource_create(resource->client(), &ste_shell_surface_interface, wl_resource_get_version(resource->handle), id);
+    wl_resource* res = wl_resource_create(resource->client(), &ste_shell_surface_interface, wl_resource_get_version(resource->handle), id);
 
     // Something with error and wayland 1.4 vs 1.7
-    wl_resource *displayRes = wl_client_get_object(resource->client(), 1);
+    wl_resource* displayRes = wl_client_get_object(resource->client(), 1);
 
     if (surface->setRole(&STEShellSurface_wl::role(), displayRes, WL_DISPLAY_ERROR_INVALID_OBJECT))
     {
@@ -80,10 +82,13 @@ void STEShell_wl::ste_shell_create_ste_softkey_with_surface(Resource* resource, 
 
 STESoftKey_wl* STEShell_wl::createSoftKey(Resource* resource, uint32_t id, uint32_t softkey_id)
 {
-    if(STESoftKey::getSoftKeyList().size() <= softkey_id)
+    STESoftKeyManager* softKeyManager = STESoftKeyManager::instance();
+
+    const QList<STESoftKey*>& softkeyList = softKeyManager->getSoftkeyList();
+    if(softkeyList.size() <= softkey_id)
         return nullptr;
 
-    STESoftKey* softkey = *(STESoftKey::getSoftKeyList().begin() + softkey_id);
+    STESoftKey* softkey = softKeyManager->fromID(softkey_id);//*(softkeyList.begin() + softkey_id);
 
     if( softkey == NULL )
     {

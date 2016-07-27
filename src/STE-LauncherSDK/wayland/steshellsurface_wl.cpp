@@ -1,5 +1,7 @@
 #include "steshellsurface_wl_p.h"
 
+#include <STE-LauncherSDK/STESoftKeyManager>
+
 #include "stesoftkey_wl_p.h"
 //#include "stesoftkey.h"
 
@@ -23,9 +25,10 @@ STEShellSurface_wl::STEShellSurface_wl(QWaylandSurface* surface, wl_resource* re
     setExtensionContainer(surface);
     QWaylandCompositorExtension::initialize();
 
-    foreach(STESoftKey* sotkey, STESoftKey::getSoftKeyList())
+    foreach(STESoftKey* softkey, STESoftKeyManager::instance()->getSoftkeyList())
     {
-        send_broadcast_available_softkey(sotkey->getID(), sotkey->getHint());
+        qDebug() << "Broadcasting softkey:" << softkey->getHint();
+        send_broadcast_available_softkey(softkey->getID(), softkey->getHint());
     }
 }
 
