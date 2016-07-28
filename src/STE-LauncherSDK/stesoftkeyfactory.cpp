@@ -1,5 +1,6 @@
 #include "stesoftkeyfactory.h"
 
+#include <QtCore/QDir>
 #include <QtCore/QCoreApplication>
 #include <QtCore/private/qfactoryloader_p.h>
 
