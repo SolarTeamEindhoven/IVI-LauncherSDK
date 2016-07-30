@@ -13,22 +13,17 @@
 
 QList<STEApp*> STEAppManager::apps;
 QList<QDir> STEAppManager::appDirs;
+QList<STEAppManager*> appManagerList;
 
 STEAppManager::STEAppManager(QObject* parent)
     : QObject(parent)
 {
-    ;
+    appManagerList.append(this);
 }
 
 STEAppManager::~STEAppManager()
 {
-    ;
-}
-
-void STEAppManager::addKnownApp(const QString& identifier)
-{
-//    apps.insert(identifier, new STEApp());
-//    emit appListChanged();
+    appManagerList.removeOne(this);
 }
 
 void STEAppManager::addAppDirectory(const QString& directoryName)
@@ -51,8 +46,6 @@ void STEAppManager::addAppDirectory(const QString& directoryName)
             continue;
 
         STEApp* app = new STEApp(dir);
-        apps.append(app);
-//        apps.insert(dir.dirName(), app);
     }
 
     emit appDirectoriesListChanged();
@@ -65,32 +58,18 @@ static QString getExecutablePath(quint64 PID)
     return info.readLink();
 }
 
-/*
-STEApp* STEAppManager::getAppFromIdentifier(const QString& identifier)
+void STEAppManager::registerApp(STEApp* app)
 {
-    auto it = apps.find(identifier);
+    if(apps.contains(app))
+        return;
 
-    if(it == apps.end())
-        return nullptr;
+    apps.append(app);
 
-    return it.value();
-}
-*/
-
-STEApp* STEAppManager::getAppFromPID(quint64 PID)
-{
-    return nullptr;
-
-    /*
-    // TODO: Revice process identification method
-
-    QString exe = getExecutablePath(PID);
-    QFileInfo info(exe);
-    QDir dir = info.absoluteDir();
-    QString identifier = dir.dirName();
-
-    return getAppFromIdentifier(identifier);
-    */
+    foreach(STEAppManager* appManager, appManagerList)
+    {
+        qDebug() << "Emitting app changes!!!";
+        emit appManager->appListChanged();
+    }
 }
 
 QQmlListProperty<STEApp> STEAppManager::getAppQMLList()

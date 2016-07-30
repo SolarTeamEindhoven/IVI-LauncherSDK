@@ -12,11 +12,17 @@
 #include "steappcontainer.h"
 #include "steappinstance.h"
 #include <STE-LauncherSDK/STESoftKeyManager>
+#include <STE-LauncherSDK/STEAppManager>
+#include <STE-LauncherSDK/STEApp>
 
 STECompositor::STECompositor(const QUrl& url, QObject *parent)
     : QWaylandQuickCompositor(parent)
     , shell(new STEShell_wl(this))
 {
+    STEAppManager manager;
+    if(qEnvironmentVariableIsSet("STE_APP_PATH"))
+        manager.addAppDirectory(qgetenv("STE_APP_PATH"));
+
     STESoftKey_wl::setView(&view);
 
     extensions().append(shell);
@@ -43,6 +49,9 @@ STECompositor::STECompositor(const QUrl& url, QObject *parent)
 
     QQuickItem* softkeyVisualItem = STESoftKeyManager::instance()->item();
     softkeyVisualItem->setParentItem(view.rootObject());
+
+    foreach(STEApp* app, manager.getAppList())
+        app->launch();
 }
 
 void STECompositor::onCreateSurface(QWaylandClient* client, uint id, int version)
@@ -60,16 +69,8 @@ void STECompositor::onCreateShellSurface(STEShellSurface_wl* shellSurface)
 
     if(appInstance == nullptr)
     {
-        if(qgetenv("STE_ENABLE_DEBUG") == "1")
-        {
-            appInstance = new STEAppInstance(shellSurface, this);
-        }
-        else
-        {
-            qWarning() << "Could not identify application with process ID" << shellSurface->getSurface()->client()->processId();
-            shellSurface->deleteLater();
-            return;
-        }
+        shellSurface->deleteLater();
+        return;
     }
 
     appInstance->addShellSurface(shellSurface);

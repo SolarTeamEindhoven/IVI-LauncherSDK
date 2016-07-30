@@ -21,14 +21,12 @@ public:
     STEAppManager(QObject* parent = nullptr);
     ~STEAppManager();
 
-    void addKnownApp(const QString& identifier);
-    const QList<STEApp*>& getAppList() const { return apps; }
+    static const QList<STEApp*>& getAppList() { return apps; }
 
     void addAppDirectory(const QString& directoryName);
-    const QList<QDir>& getAppDirectories() { return appDirs; }
+    static const QList<QDir>& getAppDirectories() { return appDirs; }
 
-//    static STEApp* getAppFromIdentifier(const QString& identifier);
-    static STEApp* getAppFromPID(quint64 PID);
+    static void registerApp(STEApp* app);
 
 signals:
     void appListChanged();

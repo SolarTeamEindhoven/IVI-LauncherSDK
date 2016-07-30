@@ -1,6 +1,7 @@
 #include "steappinstance.h"
 
 #include <QList>
+#include <QDir>
 #include <QDebug>
 
 #include "steapp.h"
@@ -19,12 +20,6 @@ STEAppInstance::STEAppInstance(STEApp* app, QObject* parent)
         app->addAppInstance(this);
 
     qDebug() << "Create app instance at:" << static_cast<void*>(this);
-}
-
-STEAppInstance::STEAppInstance(STEShellSurface_wl* shellsurface, QObject* parent)
-    : STEAppInstance( STEAppManager::getAppFromPID(shellsurface->getSurface()->client()->processId()), parent )
-{
-    addShellSurface(shellsurface);
 }
 
 STEAppInstance::~STEAppInstance()
@@ -49,6 +44,12 @@ quint64 STEAppInstance::getPID() const
     return 0;
 }
 
+static QString executingDirFromPID(qint64 PID)
+{
+    QString exe = QFile::readLink("/proc/" + QString::number(PID) + "/exe");
+    return QFileInfo(exe).canonicalPath();
+}
+
 STEAppInstance* STEAppInstance::fromPID(qint64 PID)
 {
     foreach(STEAppInstance* instance, STEAppInstanceList)
@@ -56,6 +57,39 @@ STEAppInstance* STEAppInstance::fromPID(qint64 PID)
         if(instance->getPID() == PID)
         {
             return instance;
+        }
+    }
+
+    if(qEnvironmentVariableIsSet("STE_ENABLE_DEBUG"))
+    {
+        qDebug() << "Attempting to create new app instance for process ID:" << PID;
+
+        QDir dir(executingDirFromPID(PID));
+
+        STEApp* app = nullptr;
+        foreach(STEApp* appEntry, STEAppManager::getAppList())
+        {
+            if(dir.canonicalPath() == QDir(appEntry->getWorkingDirectory()).canonicalPath())
+            {
+                app = appEntry;
+                break;
+            }
+        }
+
+        if(app == nullptr && dir.exists("MANIFEST"))
+        {
+            qDebug() << "Creating new app!";
+            app = new STEApp(dir);
+        }
+
+        if(app == nullptr)
+        {
+            qDebug() << "Could not find proper MANIFEST file unregistered applicaiton. STEShellSurface will NOT be displayed!";
+        }
+        else
+        {
+            qDebug() << "Creating new app instance!";
+            return new STEAppInstance(app);
         }
     }
 

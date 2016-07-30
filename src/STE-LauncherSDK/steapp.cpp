@@ -3,8 +3,10 @@
 #include "steappinstance.h"
 #include "steappinstancemanaged.h"
 
-#include <QDir>
-#include <QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
+
+#include <STE-LauncherSDK/STEAppManager>
 
 STEApp::STEApp(QDir& directory, QObject* parent)
     : QObject(parent)
@@ -12,6 +14,7 @@ STEApp::STEApp(QDir& directory, QObject* parent)
     , manifest(directory.filePath("MANIFEST"))
 {
     qDebug() << "Managed to load app: " << manifest.getName() << "at location:" << static_cast<void*>(this);
+    STEAppManager::registerApp(this);
 }
 
 STEApp::~STEApp()
@@ -37,6 +40,7 @@ void STEApp::addAppInstance(STEAppInstance* appInstance)
             return;
     }
 
+    qDebug() << "Adding app instance!";
     connect(appInstance, &STEAppInstance::destroyed, this, (void (STEApp::*)())&STEApp::removeAppInstance);
     instances.append(appInstance);
     emit appInstanceAdded(appInstance);

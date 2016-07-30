@@ -33,7 +33,6 @@ private slots:
 
 protected:
     STEAppInstance(STEApp* app, QObject* parent = nullptr);
-    STEAppInstance(STEShellSurface_wl* shellsurface, QObject* parent = nullptr);
 
 private:
     STEApp* app;
