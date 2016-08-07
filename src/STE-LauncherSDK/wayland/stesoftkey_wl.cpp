@@ -39,30 +39,6 @@ STESoftKey_wl::~STESoftKey_wl()
 
 void STESoftKey_wl::setSurface(QWaylandSurface* newSurface)
 {
-    /*
-    // TODO: Check what to do with surface: draw on screen, handle by plugin or invalidate(/ignore)
-    if(!softkey->isVisual())
-        return;
-
-    surface = newSurface;
-
-    if(waylandQuickItem == nullptr)
-    {
-        waylandQuickItem = new QWaylandQuickItem();
-        waylandQuickItem->setParentItem(view->rootObject());
-    }
-    else
-    {
-        if(waylandQuickItem->surface() != nullptr)
-            disconnect(waylandQuickItem->surface(), &QWaylandSurface::sizeChanged, this, &STESoftKey_wl::updateSurfacePosition);
-    }
-
-    waylandQuickItem->setSurface(surface); // TODO: Check what happens to old surface when we lose sight here...
-    updateSurfacePosition();
-    connect(surface, &QWaylandSurface::sizeChanged, this, &STESoftKey_wl::updateSurfacePosition);
-    //*/
-
-    // TODO: Replace all above with just this...
     qint64 PID = QWaylandClient::fromWlClient(newSurface->compositor(), resource()->client())->processId();
     STEAppInstance* appInstance = STEAppInstance::fromPID(PID);
     softkey->setSurface(appInstance, newSurface);

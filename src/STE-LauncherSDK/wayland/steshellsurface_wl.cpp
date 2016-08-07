@@ -3,7 +3,6 @@
 #include <STE-LauncherSDK/STESoftKeyManager>
 
 #include "stesoftkey_wl_p.h"
-//#include "stesoftkey.h"
 
 #include <QQuickItem>
 
@@ -27,7 +26,6 @@ STEShellSurface_wl::STEShellSurface_wl(QWaylandSurface* surface, wl_resource* re
 
     foreach(STESoftKey* softkey, STESoftKeyManager::instance()->getSoftkeyList())
     {
-        qDebug() << "Broadcasting softkey:" << softkey->getHint();
         send_broadcast_available_softkey(softkey->getID(), softkey->getHint());
     }
 }
@@ -64,16 +62,6 @@ void STEShellSurface_wl::ste_shell_surface_resize(Resource* resource, uint32_t s
     qDebug() << "Received resize request: " << state;
 
     // TODO
-}
-
-void STEShellSurface_wl::broadcastAvailableSoftkeys()
-{
-/*
-    foreach(STESoftKey* softkey, STESoftKey::getSoftKeys())
-    {
-        send_broadcast_available_softkey(softkey->getID(), 0); // TODO
-    }
-*/
 }
 
 void STEShellSurface_wl::updateWidth()

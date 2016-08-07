@@ -57,8 +57,6 @@ void STEShell_wl::ste_shell_create_ste_shell_surface(Resource *resource, uint32_
 
 void STEShell_wl::ste_shell_create_ste_softkey(Resource* resource, uint32_t id, uint32_t softkey_id)
 {
-    qDebug() << "Received create softkey request";
-
     STESoftKey_wl* softkey_wl = createSoftKey(resource, id, softkey_id);
 }
 
@@ -92,7 +90,6 @@ STESoftKey_wl* STEShell_wl::createSoftKey(Resource* resource, uint32_t id, uint3
 
     if( softkey == NULL )
     {
-        qWarning() << "Received creat softkey request with unknown softkey identifier" << softkey_id;
         return nullptr;
     }
 

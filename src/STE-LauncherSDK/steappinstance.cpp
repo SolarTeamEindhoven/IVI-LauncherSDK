@@ -18,8 +18,6 @@ STEAppInstance::STEAppInstance(STEApp* app, QObject* parent)
 
     if(app)
         app->addAppInstance(this);
-
-    qDebug() << "Create app instance at:" << static_cast<void*>(this);
 }
 
 STEAppInstance::~STEAppInstance()
@@ -28,8 +26,6 @@ STEAppInstance::~STEAppInstance()
 
     if(app)
         app->removeAppInstance(this);
-
-    qDebug() << "Deleted app instance at:" << static_cast<void*>(this);
 }
 
 STEApp* STEAppInstance::getApp() const
@@ -63,8 +59,6 @@ STEAppInstance* STEAppInstance::fromPID(qint64 PID)
 
     if(qEnvironmentVariableIsSet("STE_ENABLE_DEBUG"))
     {
-        qDebug() << "Attempting to create new app instance for process ID:" << PID;
-
         QDir dir(executingDirFromPID(PID));
 
         STEApp* app = nullptr;
@@ -79,7 +73,6 @@ STEAppInstance* STEAppInstance::fromPID(qint64 PID)
 
         if(app == nullptr && dir.exists("MANIFEST"))
         {
-            qDebug() << "Creating new app!";
             app = new STEApp(dir);
         }
 
@@ -89,7 +82,6 @@ STEAppInstance* STEAppInstance::fromPID(qint64 PID)
         }
         else
         {
-            qDebug() << "Creating new app instance!";
             return new STEAppInstance(app);
         }
     }
@@ -112,8 +104,6 @@ void STEAppInstance::removeShellSurface()
 
 void STEAppInstance::addShellSurface(STEShellSurface_wl* newShellsurface)
 {
-    qDebug() << "Attemting to add shell surface to instance";
-
     foreach(STEShellSurface_wl* shellSurface, shellsurfaces)
     {
         if(shellSurface == newShellsurface)
@@ -123,6 +113,5 @@ void STEAppInstance::addShellSurface(STEShellSurface_wl* newShellsurface)
     connect(newShellsurface, &STEShellSurface_wl::surfaceDestroyed, this, &STEAppInstance::removeShellSurface);
     shellsurfaces.append(newShellsurface);
 
-    qDebug() << "emit shellSurfaceAdded from" << static_cast<void*>(this);
     emit shellSurfaceAdded(newShellsurface);
 }

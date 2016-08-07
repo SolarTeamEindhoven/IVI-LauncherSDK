@@ -52,7 +52,6 @@ private:
 
     static QWaylandSurfaceRole surfaceRole;
 
-    void broadcastAvailableSoftkeys();
     void sendConfigureUpdate();
     void redraw();
     void damaged(const QRegion &rect);
