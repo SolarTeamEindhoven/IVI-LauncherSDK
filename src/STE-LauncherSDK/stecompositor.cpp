@@ -15,10 +15,14 @@
 #include <STE-LauncherSDK/STEAppManager>
 #include <STE-LauncherSDK/STEApp>
 
+#include "stedbusmanager_p.h"
+
 STECompositor::STECompositor(const QUrl& url, QObject *parent)
     : QWaylandQuickCompositor(parent)
     , shell(new STEShell_wl(this))
 {
+    dbusManager = new STEDBusManager(this);
+
     STEAppManager manager;
     if(qEnvironmentVariableIsSet("STE_APP_PATH"))
         manager.addAppDirectory(qgetenv("STE_APP_PATH"));

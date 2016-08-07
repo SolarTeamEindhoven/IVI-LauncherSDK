@@ -12,6 +12,7 @@ class STECompositor;
 class STECompositorPrivate;
 class STEShellSurface_wl;
 class STEShell_wl;
+class STEDBusManager;
 
 class Q_STE_LAUNCHERSDK_EXPORT STECompositor : public QWaylandQuickCompositor
 {
@@ -29,6 +30,7 @@ protected:
     void sizeAdjusted();
 
 private:
+    STEDBusManager* dbusManager;
     QQuickView view;
     QWaylandOutput *output;
     STEShell_wl* shell;
