@@ -33,7 +33,6 @@ signals:
 
 private slots:
     void addAppInstance(STEAppInstance* appInstance);
-    void removeAppInstance();
     void removeAppInstance(STEAppInstance* appInstance);
     void addShellSurface(STEShellSurface_wl* shellSurface);
     void removeShellSurface();

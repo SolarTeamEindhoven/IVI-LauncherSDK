@@ -49,6 +49,7 @@ void STEApp::addAppInstance(STEAppInstance* appInstance)
 void STEApp::removeAppInstance(STEAppInstance* appInstance)
 {
     instances.removeOne(appInstance);
+    emit appInstanceRemoved(appInstance);
 }
 
 void STEApp::removeAppInstance()

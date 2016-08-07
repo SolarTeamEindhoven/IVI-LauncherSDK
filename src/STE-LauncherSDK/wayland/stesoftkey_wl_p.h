@@ -27,7 +27,8 @@ public:
     static QWaylandSurfaceRole& role();
     static void setView(QQuickView* view);
 
-signals:
+protected:
+    void ste_softkey_destroy_resource(Resource *resource) Q_DECL_OVERRIDE;
 
 public slots:
     void state_changed(uint32_t state);

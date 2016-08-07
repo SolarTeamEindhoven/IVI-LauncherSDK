@@ -54,6 +54,7 @@ void STEAppContainer::setApp(STEApp* newApp)
     app = newApp;
 
     connect(app, &STEApp::appInstanceAdded, this, &STEAppContainer::addAppInstance);
+    connect(app, &STEApp::appInstanceRemoved, this, &STEAppContainer::removeAppInstance);
     foreach(STEAppInstance* appInstance, app->getInstances())
     {
         addAppInstance(appInstance);
@@ -64,9 +65,6 @@ void STEAppContainer::setApp(STEApp* newApp)
 
 void STEAppContainer::addAppInstance(STEAppInstance* appInstance)
 {
-    qDebug() << "Adding app instance" << static_cast<void*>(appInstance) << "to app container";
-
-    connect(appInstance, &STEAppInstance::destroyed, this, (void (STEAppContainer::*)())&STEAppContainer::removeAppInstance);
     connect(appInstance, &STEAppInstance::shellSurfaceAdded, this, &STEAppContainer::addShellSurface);
     foreach(STEShellSurface_wl* shellSurface, appInstance->getShellsurfaces())
     {
@@ -74,19 +72,9 @@ void STEAppContainer::addAppInstance(STEAppInstance* appInstance)
     }
 }
 
-void STEAppContainer::removeAppInstance()
-{
-    STEAppInstance* appInstance = qobject_cast<STEAppInstance*>(sender());
-
-    if(appInstance == nullptr)
-        return;
-
-    removeAppInstance(appInstance);
-}
-
 void STEAppContainer::removeAppInstance(STEAppInstance* appInstance)
 {
-    qDebug() << "Removing app instance to app container";
+    qDebug() << "Removing app instance from app container";
 
     disconnect(appInstance, &STEAppInstance::shellSurfaceAdded, this, &STEAppContainer::addShellSurface);
     foreach(STEShellSurface_wl* shellSurface, appInstance->getShellsurfaces())
@@ -99,7 +87,7 @@ void STEAppContainer::addShellSurface(STEShellSurface_wl* shellSurface)
 {
     qDebug() << "Adding shell surface to app container";
 
-    connect(shellSurface, &QObject::destroyed, this, (void (STEAppContainer::*)())&STEAppContainer::removeShellSurface);
+    connect(shellSurface, &STEShellSurface_wl::surfaceDestroyed, this, (void (STEAppContainer::*)())&STEAppContainer::removeShellSurface);
 
     QWaylandQuickItem* waylandQuickItem = new QWaylandQuickItem();
 
@@ -132,17 +120,29 @@ void STEAppContainer::removeShellSurface()
 
 void STEAppContainer::removeShellSurface(STEShellSurface_wl* shellSurface)
 {
-    qDebug() << "Removing shell surface from app container";
+    QWaylandSurface* surface = shellSurface->getSurface();
+    qDebug() << "Removing shell surface from app container, using surface:" << static_cast<void*>(surface);
 
-    foreach(QWaylandQuickItem* waylandQuickItem, waylandItems)
+    for(auto it = waylandItems.begin(); it != waylandItems.end();)
     {
-        if(waylandQuickItem->surface() == shellSurface->getSurface())
+        QWaylandQuickItem* waylandQuickItem = *it;
+        if(waylandQuickItem->surface() == surface || waylandQuickItem->surface() == nullptr)
         {
+            qDebug() << "Removing a QWaylandQuickItem item";
+
             disconnect(waylandQuickItem, &QWaylandQuickItem::widthChanged, shellSurface, &STEShellSurface_wl::updateWidth);
             disconnect(waylandQuickItem, &QWaylandQuickItem::heightChanged, shellSurface, &STEShellSurface_wl::updateHeight);
 
+            if(waylandQuickItem->surface() != nullptr)
+                waylandQuickItem->setSurface(nullptr);
+
             waylandQuickItem->deleteLater();
-            waylandItems.removeAll(waylandQuickItem);
+            it = waylandItems.erase(it);
+        }
+        else
+        {
+            qDebug() << "Not removing QWaylandQuickItem item:" << static_cast<void*>(waylandQuickItem->surface()) << "!=" << static_cast<void*>(surface);
+            it++;
         }
     }
 }

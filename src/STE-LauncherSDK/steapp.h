@@ -35,6 +35,7 @@ public:
 
 signals:
     void appInstanceAdded(STEAppInstance*);
+    void appInstanceRemoved(STEAppInstance*);
 
 private:
     QList<STEAppInstance*> instances;

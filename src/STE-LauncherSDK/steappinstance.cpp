@@ -24,11 +24,12 @@ STEAppInstance::STEAppInstance(STEApp* app, QObject* parent)
 
 STEAppInstance::~STEAppInstance()
 {
-    qDebug() << "Delete app instance at:" << static_cast<void*>(this);
     STEAppInstanceList.removeOne(this);
 
     if(app)
         app->removeAppInstance(this);
+
+    qDebug() << "Deleted app instance at:" << static_cast<void*>(this);
 }
 
 STEApp* STEAppInstance::getApp() const
@@ -106,7 +107,7 @@ void STEAppInstance::removeShellSurface()
     shellsurfaces.removeOne(shellSurface);
 
     if(shellsurfaces.isEmpty())
-        delete this;
+        deleteLater();
 }
 
 void STEAppInstance::addShellSurface(STEShellSurface_wl* newShellsurface)

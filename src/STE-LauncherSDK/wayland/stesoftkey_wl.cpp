@@ -31,6 +31,10 @@ STESoftKey_wl::STESoftKey_wl(STESoftKey* softkey, wl_resource* resource, QObject
 
 STESoftKey_wl::~STESoftKey_wl()
 {
+    disconnect(softkey, &STESoftKey::triggerStateChange, this, &STESoftKey_wl::state_changed);
+    disconnect(softkey, &STESoftKey::triggerClick, this, &STESoftKey_wl::click);
+    disconnect(softkey, &STESoftKey::triggerRotated, this, &STESoftKey_wl::rotated);
+    disconnect(softkey, &STESoftKey::hintSizeChanged, this, &STESoftKey_wl::sendSizeHint);
 }
 
 void STESoftKey_wl::setSurface(QWaylandSurface* newSurface)
@@ -72,6 +76,11 @@ QWaylandSurfaceRole& STESoftKey_wl::role()
 void STESoftKey_wl::setView(QQuickView* globalView)
 {
     view = globalView;
+}
+
+void STESoftKey_wl::ste_softkey_destroy_resource(Resource *resource)
+{
+    deleteLater();
 }
 
 void STESoftKey_wl::state_changed(uint32_t state)
