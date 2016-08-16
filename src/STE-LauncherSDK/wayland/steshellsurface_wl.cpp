@@ -54,7 +54,10 @@ QWaylandSurfaceRole& STEShellSurface_wl::role()
 
 void STEShellSurface_wl::setSize(const QSize& size, state s)
 {
-    send_configure(size.width(), size.height(), s);
+    mWidth = size.width();
+    mHeight = size.height();
+    mState = s;
+    sendConfigureUpdate();
 }
 
 void STEShellSurface_wl::ste_shell_surface_resize(Resource* resource, uint32_t state)
