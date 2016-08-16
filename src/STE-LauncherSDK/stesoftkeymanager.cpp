@@ -67,7 +67,7 @@ void STESoftKeyManager::changeActiveApp(STEAppInstance* appInstance)
 void STESoftKeyManager::loadProviders()
 {
     QStringList keys = STESoftKeyFactory::keys();
-    qDebug() << "-- Loading softkey provider using plugin keys:" << keys;
+
     if (!keys.isEmpty()) {
         QStringList requestedKeys;
         if(qEnvironmentVariableIsSet("STE_SOFTKEY_PROVIDERS"))
@@ -86,6 +86,13 @@ void STESoftKeyManager::loadProviders()
                 continue;
 
             STESoftKeyProvider* provider = STESoftKeyFactory::create(key, QStringList());
+
+            if(provider == nullptr)
+            {
+                qWarning() << "Plugin" << key << "returned null pointer as provider!";
+                continue;
+            }
+
             providers.append(provider);
             connect(provider, &STESoftKeyProvider::changeActiveApp, this, &STESoftKeyManager::changeActiveApp);
             softkeys.append(provider->createSoftKeys());
