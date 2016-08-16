@@ -1,6 +1,7 @@
 #include "stesoftkeyprovider.h"
 
-STESoftKeyProvider::STESoftKeyProvider()
+STESoftKeyProvider::STESoftKeyProvider(QObject* parent)
+    : QObject(parent)
 {
 
 }

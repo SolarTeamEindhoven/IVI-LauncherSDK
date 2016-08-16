@@ -16,7 +16,7 @@ class Q_STE_LAUNCHERSDK_EXPORT STESoftKeyProvider : public QObject
     Q_OBJECT
 
 public:
-    STESoftKeyProvider();
+    STESoftKeyProvider(QObject* parent = nullptr);
 
     virtual QList<STESoftKey*> createSoftKeys() = 0;
     virtual QQuickItem* createSoftKeyVisualization();

@@ -17,7 +17,7 @@ class Q_STE_LAUNCHERSDK_EXPORT STESoftKeyPlugin : public QObject
     Q_OBJECT
 
 public:
-    explicit STESoftKeyPlugin(QObject *parent = 0);
+    explicit STESoftKeyPlugin(QObject* parent = nullptr);
     virtual ~STESoftKeyPlugin();
 
     virtual STESoftKeyProvider* create(const QString &key, const QStringList &paramList) = 0;

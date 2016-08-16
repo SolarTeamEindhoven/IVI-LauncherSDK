@@ -2,7 +2,7 @@
 
 QT_BEGIN_NAMESPACE
 
-STESoftKeyPlugin::STESoftKeyPlugin(QObject *parent)
+STESoftKeyPlugin::STESoftKeyPlugin(QObject* parent)
     : QObject(parent)
 {
     ;
