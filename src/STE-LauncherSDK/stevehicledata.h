@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <QtDBus/QDBusVariant>
+
 #include <STE-LauncherSDK/qtstelaunchersdkglobal.h>
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +23,7 @@ public:
     QDBusVariant getDbusValue();
 
 Q_SIGNALS:
-    void valueChanged(const QDBusVariant &value);
+    void valueChanged(const QDBusVariant& value);
 
 protected:
     virtual QVariant getValue() = 0;

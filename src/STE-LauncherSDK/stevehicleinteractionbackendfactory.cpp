@@ -1,6 +1,9 @@
 #include "stevehicleinteractionbackendfactory.h"
 
 #include <QtCore/private/qfactoryloader_p.h>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
 
 #include <STE-LauncherSDK/STEVehicleInteractionBackendPlugin>
 
@@ -41,6 +44,8 @@ STEVehicleInteractionBackend* STEVehicleInteractionBackendFactory::create(const 
     }
     if (STEVehicleInteractionBackend* ret = qLoadPlugin<STEVehicleInteractionBackend, STEVehicleInteractionBackendPlugin>(loader(), name, args))
         return ret;
+
+    return nullptr;
 }
 
 QT_END_NAMESPACE
