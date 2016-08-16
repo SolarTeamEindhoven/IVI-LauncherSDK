@@ -3,7 +3,7 @@ TARGET  = declarative_STE-LauncherSDK
 TARGETPATH = solarteameindhoven/launcher
 IMPORT_VERSION = 1.0
 
-QT += qml quick quicktemplates2-private waylandclient-private STE-LauncherSDK
+QT += qml quick STE-LauncherSDK
 
 OTHER_FILES += qmldir
 
