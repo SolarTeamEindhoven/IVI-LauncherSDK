@@ -9,9 +9,7 @@ CONFIG   += c++11
 
 TARGET = STELAYRSoftKeyEmulator
 TEMPLATE = lib
-#CONFIG += plugin
 
-#DESTDIR = $$[QT_INSTALL_PLUGINS]/generic
 PLUGIN_TYPE = ste-softkey
 #PLUGIN_EXTENDS = -
 PLUGIN_CLASS_NAME = SoftKeyProviderPlugin
