@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += \ 
-    STELAYRSoftKeyEmulator
+    STELAYRSoftKeyEmulator \
+    STELAYRVehicleIntegrationEmulator
