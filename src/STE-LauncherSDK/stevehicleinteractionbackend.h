@@ -3,9 +3,13 @@
 
 #include <QObject>
 
+#include <STE-LauncherSDK/qtstelaunchersdkglobal.h>
+
+QT_BEGIN_NAMESPACE
+
 class STEVehicleData;
 
-class STEVehicleInteractionBackend : public QObject
+class Q_STE_LAUNCHERSDK_EXPORT STEVehicleInteractionBackend : public QObject
 {
     Q_OBJECT
 
@@ -14,5 +18,7 @@ public:
 
     virtual QList<STEVehicleData*> createVehicleDataObjects() = 0;
 };
+
+QT_END_NAMESPACE
 
 #endif // STEVEHICLEINTERACTIONBACKEND_H

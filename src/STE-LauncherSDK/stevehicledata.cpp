@@ -16,4 +16,9 @@ QDBusVariant STEVehicleData::getDbusValue()
     return QDBusVariant(getValue());
 }
 
+void STEVehicleData::triggerValueChangedSignal()
+{
+    emit valueChanged(getDbusValue());
+}
+
 QT_END_NAMESPACE

@@ -3,11 +3,13 @@
 
 #include <QObject>
 
+#include <STE-LauncherSDK/qtstelaunchersdkglobal.h>
+
 QT_BEGIN_NAMESPACE
 
 class STEVehicleInteractionBackend;
 
-class STEVehicleInteractionBackendFactory
+class Q_STE_LAUNCHERSDK_EXPORT STEVehicleInteractionBackendFactory
 {
 public:
     static QStringList keys(const QString &pluginPath = QString());

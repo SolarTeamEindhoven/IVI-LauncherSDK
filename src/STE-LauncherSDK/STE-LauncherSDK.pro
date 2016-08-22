@@ -2,7 +2,7 @@ TARGET     = STE-LauncherSDK
 QT         = core core-private qml quick waylandcompositor xml dbus
 CONFIG    += c++11 wayland-scanner
 
-MODULE_PLUGIN_TYPES = ste-softkey
+MODULE_PLUGIN_TYPES = ste-softkey ste-vehicleinteractionbackend
 
 load(qt_module)
 

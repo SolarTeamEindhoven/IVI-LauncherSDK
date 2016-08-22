@@ -14,7 +14,6 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader, directLoader, (STEVehicleInteractionBa
 
 QStringList STEVehicleInteractionBackendFactory::keys(const QString& pluginPath)
 {
-    qDebug() << "Plugin path:" << pluginPath;
     QStringList list;
     if (!pluginPath.isEmpty())
     {

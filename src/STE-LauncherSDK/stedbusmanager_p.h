@@ -7,6 +7,7 @@
 #include "dbusmanager_adaptor.h"
 
 class STEVehicleData;
+class STEVehicleInteractionBackend;
 
 class STEDBusManager : public QObject
 {
@@ -15,6 +16,7 @@ class STEDBusManager : public QObject
 
 public:
     explicit STEDBusManager(QObject* parent = 0);
+    ~STEDBusManager();
 
     QStringList getVehicleDataKeys() const;
 
@@ -23,9 +25,11 @@ signals:
 
 private:
     ManagerAdaptor managerAdaptor;
+    QList<STEVehicleInteractionBackend*> backends;
     QList<STEVehicleData*> vehicleDataList;
 
     void loadBackends();
+    void removeVehicleDataObject();
 };
 
 #endif // STEDBUSMANAGER_H

@@ -17,6 +17,14 @@ STEDBusManager::STEDBusManager(QObject* parent)
     connection.registerService("nl.solarteameindhoven.ivi");
 }
 
+STEDBusManager::~STEDBusManager()
+{
+    foreach(STEVehicleInteractionBackend* backend, backends)
+    {
+        delete backend;
+    }
+}
+
 QStringList STEDBusManager::getVehicleDataKeys() const
 {
     QStringList result;
@@ -53,12 +61,38 @@ void STEDBusManager::loadBackends()
                 continue;
 
             STEVehicleInteractionBackend* backend = STEVehicleInteractionBackendFactory::create(key, QStringList());
+
+            if(backend == nullptr)
+                continue;
+
+            backends.append(backend);
             QList<STEVehicleData*> list = backend->createVehicleDataObjects();
             if(!list.empty())
             {
+                QDBusConnection connection = QDBusConnection::sessionBus();
+                foreach(STEVehicleData* vehicleData, list)
+                {
+                    connect(vehicleData, &STEVehicleData::destroyed, this, &STEDBusManager::removeVehicleDataObject);
+                    connection.registerObject("/VEHICLEDATA_" + vehicleData->key(), vehicleData);
+                }
                 vehicleDataList.append(list);
                 emit vehicleDataKeysChanged();
             }
         }
+    }
+}
+
+void STEDBusManager::removeVehicleDataObject()
+{
+    STEVehicleData* vehicleData = qobject_cast<STEVehicleData*>(sender());
+
+    if(vehicleData != nullptr)
+    {
+        qDebug() << "Unregistring vehicle data object!";
+
+        QDBusConnection connection = QDBusConnection::sessionBus();
+        connection.unregisterObject("/VEHICLEDATA_" + vehicleData->key());
+
+        vehicleDataList.removeOne(vehicleData);
     }
 }

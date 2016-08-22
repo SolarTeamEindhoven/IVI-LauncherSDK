@@ -23,10 +23,11 @@ public:
     QDBusVariant getDbusValue();
 
 Q_SIGNALS:
-    void valueChanged(const QDBusVariant& value);
+    void valueChanged(const QDBusVariant&);
 
 protected:
     virtual QVariant getValue() = 0;
+    void triggerValueChangedSignal();
 
 private:
     VehicledataAdaptor* adaptor;
