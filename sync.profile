@@ -1,5 +1,5 @@
 %modules = ( # path to module name map
-    "STE-LauncherSDK" => "$basedir/src/STE-LauncherSDK",
+    "IVI-LauncherSDK" => "$basedir/src/IVI-LauncherSDK",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );

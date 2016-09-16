@@ -1,0 +1,50 @@
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+
+project                                         = IVI-LauncherSDK
+description                                     = Solar Team Eindhoven Launcher SDK Reference Documentation
+version                                         = $QT_VERSION
+
+examplesinstallpath                             = IVI-LauncherSDK
+
+qhp.projects                                       = IVI-LauncherSDK
+
+qhp.IVI-LauncherSDK.file                              = IVI-LauncherSDK.qhp
+qhp.IVI-LauncherSDK.namespace                         = org.qt-project.IVI-LauncherSDK.$QT_VERSION_TAG
+qhp.IVI-LauncherSDK.virtualFolder                     = IVI-LauncherSDK
+qhp.IVI-LauncherSDK.indexTitle                        = STE Launcher SDK
+qhp.IVI-LauncherSDK.indexRoot                         =
+qhp.IVI-LauncherSDK.filterAttributes                  = IVI-LauncherSDK $QT_VERSION qtrefdoc
+qhp.IVI-LauncherSDK.customFilters.Qt.name             = IVI-LauncherSDK $QT_VERSION
+qhp.IVI-LauncherSDK.customFilters.Qt.filterAttributes = IVI-LauncherSDK $QT_VERSION
+
+qhp.IVI-LauncherSDK.subprojects                       = qmltypes classes examples
+qhp.IVI-LauncherSDK.subprojects.qmltypes.title        = QML Types
+qhp.IVI-LauncherSDK.subprojects.qmltypes.indexTitle   = STE Launcher SDK QML Types
+qhp.IVI-LauncherSDK.subprojects.qmltypes.selectors    = qmlclass
+qhp.IVI-LauncherSDK.subprojects.qmltypes.sortPages    = true
+qhp.IVI-LauncherSDK.subprojects.classes.title         = C++ Classes
+qhp.IVI-LauncherSDK.subprojects.classes.indexTitle    = STE Launcher SDK C++ Classes
+qhp.IVI-LauncherSDK.subprojects.classes.selectors     = class fake:headerfile
+qhp.IVI-LauncherSDK.subprojects.classes.sortPages     = true
+qhp.IVI-LauncherSDK.subprojects.examples.title        = Examples
+qhp.IVI-LauncherSDK.subprojects.examples.indexTitle   = STE Launcher SDK Examples
+qhp.IVI-LauncherSDK.subprojects.examples.selectors    = fake:example
+qhp.IVI-LauncherSDK.subprojects.examples.sortPages    = true
+
+
+headerdirs += ../ \
+              ../../plugins
+
+sourcedirs += ../ \
+              ../../plugins
+
+exampledirs += ../../../examples
+
+imagedirs  += images
+
+Cpp.ignoretokens         += Q_STELAUNCHERSDK_EXPORT
+Cpp.ignoredirectives     += Q_DECLARE_LOGGING_CATEGORY
+
+navigation.landingpage    = "STE Launcher SDK"
+navigation.qmltypespage   = "STE Launcher SDK QML Types"
+navigation.cppclassespage = "STE Launcher SDK C++ Classes"

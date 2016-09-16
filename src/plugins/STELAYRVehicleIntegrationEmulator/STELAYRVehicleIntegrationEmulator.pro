@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets STE-LauncherSDK
+QT       += core gui widgets IVI-LauncherSDK
 CONFIG   += c++11
 
 TARGET = STELAYRVehicleIntegrationEmulator

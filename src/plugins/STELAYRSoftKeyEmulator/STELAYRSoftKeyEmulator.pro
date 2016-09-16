@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui gui-private STE-LauncherSDK quickwidgets
+QT       += core gui gui-private IVI-LauncherSDK quickwidgets
 CONFIG   += c++11
 
 TARGET = STELAYRSoftKeyEmulator

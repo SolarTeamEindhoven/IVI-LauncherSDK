@@ -1,11 +1,11 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += \
-    STE-LauncherSDK \
+    IVI-LauncherSDK \
     plugins
 
 qtHaveModule(quick) {
     src_imports.subdir = imports
-    src_imports.depends = STE-LauncherSDK
+    src_imports.depends = IVI-LauncherSDK
     SUBDIRS += src_imports
 }

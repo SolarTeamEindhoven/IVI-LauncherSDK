@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-SUBDIRS += STE-LauncherSDK
+SUBDIRS += IVI-LauncherSDK

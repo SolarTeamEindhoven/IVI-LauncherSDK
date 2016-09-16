@@ -1,0 +1,23 @@
+/*!
+  \module IVI-LauncherSDK
+  \title IVI-LauncherSDK C++ Classes
+  \ingroup modules
+  \qtvariable IVI-LauncherSDK
+
+  \brief Provides C++ classes for using STE Launcher SDK.
+
+  To include the definitions of the module's classes, use the following directive:
+
+  \code
+  #include <IVI-LauncherSDK>
+  \endcode
+
+  To link against the module, add this line to your \l qmake \c .pro file:
+
+  \code
+  QT += IVI-LauncherSDK
+  \endcode
+
+  For more information about using these classes in your application,
+  see the \l{IVI-LauncherSDK} documentation.
+*/

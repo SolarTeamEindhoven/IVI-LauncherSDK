@@ -1,6 +1,0 @@
-module solarteameindhoven.launcher
-plugin declarative_STE-LauncherSDK
-classname STELauncherSDKModule
-typeinfo plugins.qmltypes
-depends QtQuick.Templates 2.0
-designersupported
