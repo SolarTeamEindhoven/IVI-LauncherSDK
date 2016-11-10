@@ -35,7 +35,7 @@ private:
     QWaylandOutput *output;
     STEShell_wl* shell;
 
-    void onCreateSurface(QWaylandClient* client, uint id, int version);
+    void onSurfaceRequested(QWaylandClient* client, uint id, int version);
     void onCreateShellSurface(STEShellSurface_wl* shellSurface);
 };
 

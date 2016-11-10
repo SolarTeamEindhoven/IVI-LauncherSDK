@@ -31,7 +31,7 @@ STECompositor::STECompositor(const QUrl& url, QObject *parent)
 
     extensions().append(shell);
 
-    connect(this, &QWaylandCompositor::createSurface, this, &STECompositor::onCreateSurface);
+    connect(this, &QWaylandCompositor::surfaceRequested, this, &STECompositor::onSurfaceRequested);
     connect(shell, &STEShell_wl::createShellSurface, this, &STECompositor::onCreateShellSurface);
 
     create();
@@ -58,9 +58,9 @@ STECompositor::STECompositor(const QUrl& url, QObject *parent)
         app->launch();
 }
 
-void STECompositor::onCreateSurface(QWaylandClient* client, uint id, int version)
+void STECompositor::onSurfaceRequested(QWaylandClient* client, uint id, int version)
 {
-    qDebug() << "Fired onCreateSurface: {client PID:" << client->processId() << ", id:" << id << ", version:" << version << '}';
+    qDebug() << "Fired onSurfaceRequested: {client PID:" << client->processId() << ", id:" << id << ", version:" << version << '}';
 
 //    QWaylandQuickItem* n = new QWaylandQuickItem();
 }
