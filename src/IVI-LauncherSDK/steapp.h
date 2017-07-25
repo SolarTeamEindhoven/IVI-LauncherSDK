@@ -2,6 +2,7 @@
 #define STEAPP_H
 
 #include <QObject>
+#include <QQmlListProperty>
 
 #include "stemanifestparser.h"
 
@@ -15,6 +16,12 @@ class QDir;
 class Q_STE_LAUNCHERSDK_EXPORT STEApp: public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString workingDirectory READ getWorkingDirectory CONSTANT)
+    Q_PROPERTY(QString name READ getName CONSTANT)
+    Q_PROPERTY(QString description READ getDescription CONSTANT)
+    Q_PROPERTY(QString icon READ getIcon CONSTANT)
+    Q_PROPERTY(QString Website READ getWebsite CONSTANT)
+    Q_PROPERTY(QQmlListProperty<const QString> categories READ getCategoriesQml CONSTANT)
 
 public:
     STEApp(QDir& directory, QObject* parent = nullptr);
@@ -45,6 +52,10 @@ private:
     void addAppInstance(STEAppInstance* appInstance);
     void removeAppInstance(STEAppInstance* appInstance);
     void removeAppInstance();
+
+    QQmlListProperty<const QString> getCategoriesQml() const;
+    static int categoriesCountFunction(QQmlListProperty<const QString>*);
+    static const QString* categoriesAtFunction(QQmlListProperty<const QString>*, int);
 
     friend class STEAppInstance;
 };

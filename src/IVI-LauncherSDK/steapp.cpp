@@ -11,7 +11,7 @@
 STEApp::STEApp(QDir& directory, QObject* parent)
     : QObject(parent)
     , workingDirectory(directory.absolutePath())
-    , manifest(directory.filePath("MANIFEST"))
+    , manifest(directory.filePath(QStringLiteral("MANIFEST")))
 {
     qDebug() << "Managed to load app: " << manifest.getName() << "at location:" << static_cast<void*>(this);
     STEAppManager::registerApp(this);
@@ -60,4 +60,21 @@ void STEApp::removeAppInstance()
         return;
 
     removeAppInstance(appInstance);
+}
+
+QQmlListProperty<const QString> STEApp::getCategoriesQml() const
+{
+    return QQmlListProperty<const QString>(const_cast<STEApp*>(this), nullptr, &STEApp::categoriesCountFunction, &STEApp::categoriesAtFunction);
+}
+
+int STEApp::categoriesCountFunction(QQmlListProperty<const QString>* list)
+{
+    STEApp* app = qobject_cast<STEApp*>(list->object);
+    return app->manifest.getCategories().count();
+}
+
+const QString* STEApp::categoriesAtFunction(QQmlListProperty<const QString>* list, int index)
+{
+    STEApp* app = qobject_cast<STEApp*>(list->object);
+    return &(app->manifest.getCategories().at(index));
 }
