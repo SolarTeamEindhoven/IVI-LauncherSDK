@@ -18,7 +18,6 @@ HEADERS += qtstelaunchersdkglobal.h \
     steappinstance.h \
     steapp.h \
     steappmanager.h \
-    steappprocessmanager.h \
     stemanifestparser.h \
     steappinstancemanaged.h \
     stesoftkey.h \
@@ -44,7 +43,6 @@ SOURCES += \
     steappinstance.cpp \
     steapp.cpp \
     steappmanager.cpp \
-    steappprocessmanager.cpp \
     stemanifestparser.cpp \
     steappinstancemanaged.cpp \
     stesoftkey.cpp \
