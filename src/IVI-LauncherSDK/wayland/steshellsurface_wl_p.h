@@ -38,7 +38,7 @@ signals:
     void surfaceDestroyed();
 
 public slots:
-    void setSize(const QSize& size, state s);
+    void setSize(const QSize& size, sizeState s);
     void updateWidth();
     void updateHeight();
 

@@ -53,7 +53,7 @@ QWaylandSurfaceRole& STEShellSurface_wl::role()
     return surfaceRole;
 }
 
-void STEShellSurface_wl::setSize(const QSize& size, state s)
+void STEShellSurface_wl::setSize(const QSize& size, sizeState s)
 {
     mWidth = size.width();
     mHeight = size.height();
