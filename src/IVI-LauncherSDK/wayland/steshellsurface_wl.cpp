@@ -66,7 +66,7 @@ void STEShellSurface_wl::ste_shell_surface_resize(Resource* resource, uint32_t s
 {
     qDebug() << "Received resize request: " << state;
 
-    // TODO
+    emit resizeRequest(static_cast<STEAppInstance::SizeState>(state));
 }
 
 void STEShellSurface_wl::updateWidth()

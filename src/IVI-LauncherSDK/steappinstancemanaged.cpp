@@ -13,20 +13,15 @@ STEAppInstanceManaged::STEAppInstanceManaged(STEApp* app, QObject* parent)
     env.insert("QT_QPA_PLATFORM", "wayland");
     env.insert("QT_WAYLAND_SHELL_INTEGRATION", "wayland-ste");
     env.insert("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
-
-    // TODO: Make configurable
-    env.insert("QT_QUICK_CONTROLS_STYLE", "material");
-//    env.insert("QT_QUICK_CONTROLS_MATERIAL_THEME", "Dark");
-    env.insert("QT_QUICK_CONTROLS_MATERIAL_ACCENT", "DeepOrange");
-    env.insert("QT_QUICK_CONTROLS_MATERIAL_PRIMARY", "Yellow");
-    env.insert("QT_QUICK_CONTROLS_MATERIAL_FOREGROUND", "Amber");
-    env.insert("QT_QUICK_CONTROLS_MATERIAL_BACKGROUND", "Amber");
-
-    // TODO: Remove... or at least make dynamic
     env.insert("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", "1");
-    env.insert("QT_PLUGIN_PATH", qgetenv("QT_PLUGIN_PATH"));
-    env.insert("LD_LIBRARY_PATH", qgetenv("LD_LIBRARY_PATH"));
-    env.insert("QML2_IMPORT_PATH", qgetenv("QML2_IMPORT_PATH"));
+
+    // TODO: Make dynamic
+//    env.insert("QT_QUICK_CONTROLS_STYLE", "material");
+//    env.insert("QT_QUICK_CONTROLS_MATERIAL_THEME", "Dark");
+//    env.insert("QT_QUICK_CONTROLS_MATERIAL_ACCENT", "DeepOrange");
+//    env.insert("QT_QUICK_CONTROLS_MATERIAL_PRIMARY", "Yellow");
+//    env.insert("QT_QUICK_CONTROLS_MATERIAL_FOREGROUND", "Amber");
+//    env.insert("QT_QUICK_CONTROLS_MATERIAL_BACKGROUND", "Amber");
 
     QDir dir(app->getWorkingDirectory());
 

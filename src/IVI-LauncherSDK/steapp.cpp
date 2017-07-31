@@ -41,13 +41,16 @@ void STEApp::addAppInstance(STEAppInstance* appInstance)
     }
 
     qDebug() << "Adding app instance!";
-    connect(appInstance, &STEAppInstance::destroyed, this, (void (STEApp::*)())&STEApp::removeAppInstance);
+    connect(appInstance, &STEAppInstance::destroyed, this, static_cast<void (STEApp::*)()>(&STEApp::removeAppInstance));
+    connect(appInstance, &STEAppInstance::resizeRequest, this, &STEApp::resizeRequest);
     instances.append(appInstance);
     emit appInstanceAdded(appInstance);
 }
 
 void STEApp::removeAppInstance(STEAppInstance* appInstance)
 {
+    disconnect(appInstance, &STEAppInstance::destroyed, this, static_cast<void (STEApp::*)()>(&STEApp::removeAppInstance));
+    disconnect(appInstance, &STEAppInstance::resizeRequest, this, &STEApp::resizeRequest);
     instances.removeOne(appInstance);
     emit appInstanceRemoved(appInstance);
 }

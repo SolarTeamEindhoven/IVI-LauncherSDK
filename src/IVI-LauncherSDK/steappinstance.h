@@ -18,6 +18,13 @@ class Q_STE_LAUNCHERSDK_EXPORT STEAppInstance: public QObject
 public:
     virtual ~STEAppInstance();
 
+    enum SizeState : uint32_t {
+        sizeState_normal = 0,
+        sizeState_minimal = 1,
+        sizeState_maximal = 2
+    };
+    Q_ENUM(SizeState)
+
     STEApp* getApp() const;
     virtual quint64 getPID() const;
 
@@ -27,6 +34,7 @@ public:
 
 signals:
     void shellSurfaceAdded(STEShellSurface_wl* shellSurface);
+    void resizeRequest(SizeState sizeState);
 
 private slots:
     void removeShellSurface();

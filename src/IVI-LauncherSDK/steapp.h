@@ -7,10 +7,10 @@
 #include "stemanifestparser.h"
 
 #include <IVI-LauncherSDK/qtstelaunchersdkglobal.h>
+#include <IVI-LauncherSDK/STEAppInstance>
 
 QT_BEGIN_NAMESPACE
 
-class STEAppInstance;
 class QDir;
 
 class Q_STE_LAUNCHERSDK_EXPORT STEApp: public QObject
@@ -43,6 +43,7 @@ public:
 signals:
     void appInstanceAdded(STEAppInstance*);
     void appInstanceRemoved(STEAppInstance*);
+    void resizeRequest(STEAppInstance::SizeState sizeState);
 
 private:
     QList<STEAppInstance*> instances;

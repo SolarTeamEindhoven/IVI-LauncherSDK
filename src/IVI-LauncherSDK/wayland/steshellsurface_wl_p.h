@@ -9,6 +9,7 @@
 #include <QWaylandCompositorExtensionTemplate>
 #include <QWaylandSurfaceRole>
 
+#include <IVI-LauncherSDK/STEAppInstance>
 #include <IVI-LauncherSDK/private/qwayland-server-STE.h>
 
 #include "wayland-util.h"
@@ -22,10 +23,8 @@ class STEShellSurface_wl : public QWaylandCompositorExtensionTemplate<STEShellSu
 {
     Q_OBJECT
 
-    Q_ENUMS(state)
-
 public:
-    explicit STEShellSurface_wl(QWaylandSurface* surface, wl_resource* resource);
+    STEShellSurface_wl(QWaylandSurface* surface, wl_resource* resource);
     ~STEShellSurface_wl();
 
     void initialize(QWaylandSurface* surface, wl_resource* resource);
@@ -36,6 +35,7 @@ public:
 signals:
     void surfaceChanged();
     void surfaceDestroyed();
+    void resizeRequest(STEAppInstance::SizeState);
 
 public slots:
     void setSize(const QSize& size, sizeState s);

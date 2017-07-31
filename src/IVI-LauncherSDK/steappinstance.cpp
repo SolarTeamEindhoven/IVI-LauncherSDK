@@ -96,6 +96,8 @@ void STEAppInstance::removeShellSurface()
     if(shellSurface == NULL)
         return;
 
+    disconnect(shellSurface, &STEShellSurface_wl::surfaceDestroyed, this, &STEAppInstance::removeShellSurface);
+    disconnect(shellSurface, &STEShellSurface_wl::resizeRequest, this, &STEAppInstance::resizeRequest);
     shellsurfaces.removeOne(shellSurface);
 
     if(shellsurfaces.isEmpty())
@@ -111,6 +113,7 @@ void STEAppInstance::addShellSurface(STEShellSurface_wl* newShellsurface)
     }
 
     connect(newShellsurface, &STEShellSurface_wl::surfaceDestroyed, this, &STEAppInstance::removeShellSurface);
+    connect(newShellsurface, &STEShellSurface_wl::resizeRequest, this, &STEAppInstance::resizeRequest);
     shellsurfaces.append(newShellsurface);
 
     emit shellSurfaceAdded(newShellsurface);
