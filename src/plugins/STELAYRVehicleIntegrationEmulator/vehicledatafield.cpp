@@ -105,19 +105,19 @@ QJsonObject VehicleDataField::toJsonObject()
 void VehicleDataField::updateValueDOUBLE(double v)
 {
     vehicleData.value.setValue(v);
-    emit vehicleData.valueChanged(vehicleData.getDbusValue());
+    emit vehicleData.valueChanged();
 }
 
 void VehicleDataField::updateValueINT32(int v)
 {
     vehicleData.value.setValue(static_cast<int32_t>(v));
-    emit vehicleData.valueChanged(vehicleData.getDbusValue());
+    emit vehicleData.valueChanged();
 }
 
 void VehicleDataField::updateValueUINT32(int v)
 {
     vehicleData.value.setValue(static_cast<uint32_t>(v));
-    emit vehicleData.valueChanged(vehicleData.getDbusValue());
+    emit vehicleData.valueChanged();
 }
 
 const char* VehicleDataField::fromValueDataTypes(ValueDataTypes v)

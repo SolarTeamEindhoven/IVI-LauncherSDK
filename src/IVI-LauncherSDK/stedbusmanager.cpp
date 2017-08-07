@@ -3,6 +3,7 @@
 #include <QtDBus/QDBusConnection>
 
 #include <IVI-LauncherSDK/STEVehicleData>
+#include <IVI-LauncherSDK/STEVehicleSetting>
 #include <IVI-LauncherSDK/STEVehicleInteractionBackend>
 #include <IVI-LauncherSDK/STEVehicleInteractionBackendFactory>
 
@@ -31,6 +32,16 @@ QStringList STEDBusManager::getVehicleDataKeys() const
 
     foreach(STEVehicleData* vehicleData, vehicleDataList)
         result.append(vehicleData->key());
+
+    return result;
+}
+
+QStringList STEDBusManager::getVehicleSettingKeys() const
+{
+    QStringList result;
+
+    foreach(STEVehicleSetting* vehicleSetting, vehicleSettingList)
+        result.append(vehicleSetting->key());
 
     return result;
 }
@@ -66,17 +77,33 @@ void STEDBusManager::loadBackends()
                 continue;
 
             backends.append(backend);
-            QList<STEVehicleData*> list = backend->createVehicleDataObjects();
-            if(!list.empty())
             {
-                QDBusConnection connection = QDBusConnection::sessionBus();
-                foreach(STEVehicleData* vehicleData, list)
+                QList<STEVehicleData*> list = backend->createVehicleDataObjects();
+                if(!list.empty())
                 {
-                    connect(vehicleData, &STEVehicleData::destroyed, this, &STEDBusManager::removeVehicleDataObject);
-                    connection.registerObject("/VEHICLEDATA_" + vehicleData->key(), vehicleData);
+                    QDBusConnection connection = QDBusConnection::sessionBus();
+                    foreach(STEVehicleData* vehicleData, list)
+                    {
+                        connect(vehicleData, &STEVehicleData::destroyed, this, &STEDBusManager::removeVehicleDataObject);
+                        connection.registerObject("/VehicleData/" + vehicleData->key(), vehicleData);
+                    }
+                    vehicleDataList.append(list);
+                    emit vehicleDataKeysChanged();
                 }
-                vehicleDataList.append(list);
-                emit vehicleDataKeysChanged();
+            }
+            {
+                QList<STEVehicleSetting*> list = backend->createVehicleSettingObjects();
+                if(!list.empty())
+                {
+                    QDBusConnection connection = QDBusConnection::sessionBus();
+                    foreach(STEVehicleSetting* vehicleSetting, list)
+                    {
+                        connect(vehicleSetting, &STEVehicleSetting::destroyed, this, &STEDBusManager::removeVehicleSettingObject);
+                        connection.registerObject("/VehicleSetting/" + vehicleSetting->key(), vehicleSetting);
+                    }
+                    vehicleSettingList.append(list);
+                    emit vehicleSettingKeysChanged();
+                }
             }
         }
     }
@@ -88,11 +115,22 @@ void STEDBusManager::removeVehicleDataObject()
 
     if(vehicleData != nullptr)
     {
-        qDebug() << "Unregistring vehicle data object!";
-
         QDBusConnection connection = QDBusConnection::sessionBus();
-        connection.unregisterObject("/VEHICLEDATA_" + vehicleData->key());
+        connection.unregisterObject("/VehicleData/" + vehicleData->key());
 
         vehicleDataList.removeOne(vehicleData);
+    }
+}
+
+void STEDBusManager::removeVehicleSettingObject()
+{
+    STEVehicleSetting* vehicleSetting = qobject_cast<STEVehicleSetting*>(sender());
+
+    if(vehicleSetting != nullptr)
+    {
+        QDBusConnection connection = QDBusConnection::sessionBus();
+        connection.unregisterObject("/VehicleSetting/" + vehicleSetting->key());
+
+        vehicleSettingList.removeOne(vehicleSetting);
     }
 }

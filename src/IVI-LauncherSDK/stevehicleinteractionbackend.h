@@ -8,6 +8,7 @@
 QT_BEGIN_NAMESPACE
 
 class STEVehicleData;
+class STEVehicleSetting;
 
 class Q_STE_LAUNCHERSDK_EXPORT STEVehicleInteractionBackend : public QObject
 {
@@ -16,7 +17,8 @@ class Q_STE_LAUNCHERSDK_EXPORT STEVehicleInteractionBackend : public QObject
 public:
     explicit STEVehicleInteractionBackend(QObject* parent = nullptr);
 
-    virtual QList<STEVehicleData*> createVehicleDataObjects() = 0;
+    virtual QList<STEVehicleData*> createVehicleDataObjects();
+    virtual QList<STEVehicleSetting*> createVehicleSettingObjects();
 };
 
 QT_END_NAMESPACE

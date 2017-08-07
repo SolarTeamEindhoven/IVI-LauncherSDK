@@ -14,23 +14,21 @@ class VehicledataAdaptor;
 class Q_STE_LAUNCHERSDK_EXPORT STEVehicleData : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QDBusVariant value READ getDbusValue NOTIFY valueChanged)
+    Q_PROPERTY(QVariant value READ getDbusValue NOTIFY valueChanged)
 
 public:
     explicit STEVehicleData(QObject *parent = 0);
 
     virtual QString key() = 0;
-    QDBusVariant getDbusValue();
+    virtual QVariant getValue() = 0;
 
 Q_SIGNALS:
-    void valueChanged(const QDBusVariant&);
-
-protected:
-    virtual QVariant getValue() = 0;
-    void triggerValueChangedSignal();
+    void valueChanged();
 
 private:
     VehicledataAdaptor* adaptor;
+
+    QVariant getDbusValue();
 };
 
 QT_END_NAMESPACE

@@ -10,7 +10,7 @@ DEFINES += QT_BUILD_STE_LAUNCHERSDK_LIB
 
 QMAKE_DOCS = $$PWD/doc/IVI-LauncherSDK.qdocconf
 
-DBUS_ADAPTORS += ../protocol/DBUSManager.xml ../protocol/DBUSVehicleData.xml
+DBUS_ADAPTORS += ../protocol/DBUSManager.xml ../protocol/DBUSVehicleData.xml ../protocol/DBUSVehicleSetting.xml
 
 HEADERS += qtstelaunchersdkglobal.h \
     stecompositor.h \
@@ -32,7 +32,8 @@ HEADERS += qtstelaunchersdkglobal.h \
     stevehicledata.h \
     stevehicleinteractionbackendfactory.h \
     stevehicleinteractionbackend.h \
-    stevehicleinteractionbackendplugin.h
+    stevehicleinteractionbackendplugin.h \
+    stevehiclesetting.h
 
 SOURCES += \ 
     wayland/steshell_wl.cpp \
@@ -54,7 +55,8 @@ SOURCES += \
     stevehicledata.cpp \
     stevehicleinteractionbackendfactory.cpp \
     stevehicleinteractionbackend.cpp \
-    stevehicleinteractionbackendplugin.cpp
+    stevehicleinteractionbackendplugin.cpp \
+    stevehiclesetting.cpp
 
 contains(QT_CONFIG, no-pkg-config) {
     LIBS += -lwayland-server
