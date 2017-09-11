@@ -1,0 +1,11 @@
+/*!
+    \module IVI-Launcher
+    \qtvariable IVI-Launcher
+    \title IVI Launcher C++ Classes
+*/
+
+/*!
+    \qmlmodule ivi.launcher 1.0
+    \title IVI Launcher QML Types
+*/
+

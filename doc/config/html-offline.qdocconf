@@ -1,0 +1,4 @@
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+include($QT_INSTALL_DOCS/global/fileextensions.qdocconf)
+
+HTML.nobreadcrumbs    = "true"

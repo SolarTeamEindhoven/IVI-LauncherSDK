@@ -1,0 +1,5 @@
+url                          = https://layr.solarteameindhoven.nl/IVI-Launcher
+navigation.homepage          = "IVI Documentation (Technology Preview)"
+navigation.landingpage       = "IVI Launcher"
+navigation.cppclassespage    = "IVI Launcher C++ Classes"
+navigation.qmltypespage      = "IVI Launcher QML Types"

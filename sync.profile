@@ -1,5 +1,5 @@
 %modules = ( # path to module name map
-    "IVI-LauncherSDK" => "$basedir/src/IVI-LauncherSDK",
+    "IVI-Launcher" => "$basedir/src/IVI-Launcher"
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
@@ -12,5 +12,5 @@
 %dependencies = (
     "qtbase" => "",
     "qtdeclarative" => "",
-    "qtxmlpatterns" => "",
+    "qtwayland" => ""
 );
