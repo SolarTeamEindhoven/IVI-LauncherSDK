@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
 
 class VehiclesettingAdaptor;
 
-class STEVehicleSetting : public QObject
+class Q_STE_LAUNCHERSDK_EXPORT STEVehicleSetting : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ getDbusValue WRITE setValue NOTIFY valueChanged)
