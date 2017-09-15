@@ -9,22 +9,24 @@
 QT_BEGIN_NAMESPACE
 
 class IVIApplication;
+class IVIApplicationManagerPrivate;
 
 class Q_IVI_LAUNCHER_EXPORT IVIApplicationManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<IVIApplication> applications READ getQmlApplicationList NOTIFY applicationListChanged)
+    Q_DECLARE_PRIVATE(IVIApplicationManager)
 
 public:
-    explicit IVIApplicationManager(QObject* parent = nullptr);
-    ~IVIApplicationManager();
+    QList<IVIApplication*> getApplicationList() const;
 
-    QQmlListProperty<IVIApplication> getQmlApplicationList() const;
-
-    static void registerApplication(IVIApplication*); // TODO: Hide from user
+    static IVIApplicationManager& getInstance();
 
 signals:
     void applicationListChanged();
+
+private:
+    explicit IVIApplicationManager(QObject* parent = nullptr);
+    ~IVIApplicationManager();
 };
 
 QT_END_NAMESPACE

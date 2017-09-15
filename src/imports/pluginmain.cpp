@@ -32,15 +32,10 @@
 #include <IVI-Launcher/IVIApplicationManager>
 #include <QtQml>
 
+#include "iviapplicationmanagerqml.h"
+
 QT_BEGIN_NAMESPACE
-/*
-static QObject *otaClientSingleton(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
-{
-    Q_UNUSED(qmlEngine);
-    Q_UNUSED(jsEngine);
-    return &QOtaClient::instance();
-}
-*/
+
 class IVILauncherPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
@@ -51,10 +46,9 @@ public:
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("ivi.launcher"));
 
-//        qmlRegisterSingletonType<IVIAppContainer>(uri, 1, 0, "OtaClient", otaClientSingleton);
         qmlRegisterType<IVIAppContainer>(uri, 1, 0, "AppContainer");
         qmlRegisterUncreatableType<IVIApplication>(uri, 1, 0, "Application", "Applications can be craete only using an application manager");
-        qmlRegisterType<IVIApplicationManager>(uri, 1, 0, "ApplicationManager");
+        qmlRegisterType<IVIApplicationManagerQML>(uri, 1, 0, "ApplicationManager");
         qmlRegisterType<IVILauncherQML>(uri, 1, 0, "Launcher");
     }
 };

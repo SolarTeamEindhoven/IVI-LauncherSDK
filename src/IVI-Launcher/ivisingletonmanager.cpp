@@ -9,6 +9,8 @@
 
 #include <IVISurfaceManager>
 #include "ividbusmanager_p.h"
+#include "iviappprocessmanager_p.h"
+#include "iviapplicationmanager_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -26,6 +28,7 @@ public:
         , compositor(createCompositor(engine))
         , textInputManager(compositor.get())
         , surfaceManager(compositor.get())
+        , applicationManager(IVIApplicationManagerPrivate::createIVIApplicationManagerPrivate())
     {}
 
     IVIGraphics getEngine() const {
@@ -45,12 +48,22 @@ public:
         return surfaceManager;
     }
 
+    IVIApplicationManager& getApplicationManager() noexcept {
+        return applicationManager;
+    }
+
+    IVIAppProcessManager& getAppProcessManager() noexcept {
+        return appProcessManager;
+    }
+
 private:
     const IVISingletonManager::IVIGraphicsEngine engine;
     std::unique_ptr<QWaylandCompositor> compositor;
     QWaylandTextInputManager textInputManager;
     IVISurfaceManager surfaceManager;
     IVIDBusManager iviDBusManager;
+    IVIApplicationManager& applicationManager;
+    IVIAppProcessManager appProcessManager;
 
     static constexpr IVISingletonManager::IVIGraphicsEngine
     toIVIGraphicsEngine(IVIGraphics graphicsEngine) {
@@ -108,6 +121,14 @@ QWaylandCompositor& IVISingletonManager::getCompositor() noexcept {
 
 IVISurfaceManager& IVISingletonManager::getSurfaceManager() noexcept {
     return fetchSingletonFactory().getSurfaceManager();
+}
+
+IVIApplicationManager& IVISingletonManager::getApplicationManager() noexcept {
+    return fetchSingletonFactory().getApplicationManager();
+}
+
+IVIAppProcessManager& IVISingletonManager::getAppProcessManager() noexcept {
+    return fetchSingletonFactory().getAppProcessManager();
 }
 
 QT_END_NAMESPACE

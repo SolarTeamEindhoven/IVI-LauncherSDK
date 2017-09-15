@@ -7,6 +7,7 @@
 
 IVIManifest::IVIManifest(const QString& filename)
     : state(RootState)
+    , filename(filename)
 {
     QFile file(filename);
     file.open(QFile::ReadOnly);

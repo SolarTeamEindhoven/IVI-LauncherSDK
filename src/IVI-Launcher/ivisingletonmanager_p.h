@@ -6,6 +6,8 @@
 QT_BEGIN_NAMESPACE
 
 class IVISurfaceManager;
+class IVIAppProcessManager;
+class IVIApplicationManager;
 
 namespace IVISingletonManager
 {
@@ -18,6 +20,8 @@ namespace IVISingletonManager
 
     QWaylandCompositor& getCompositor() noexcept;
     IVISurfaceManager& getSurfaceManager() noexcept;
+    IVIApplicationManager& getApplicationManager() noexcept;
+    IVIAppProcessManager& getAppProcessManager() noexcept;
 };
 
 QT_END_NAMESPACE

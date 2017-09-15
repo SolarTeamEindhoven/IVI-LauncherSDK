@@ -12,7 +12,9 @@
 #include <QtWaylandCompositor/QWaylandIviSurface>
 
 #include <IVIManifest>
-#include <IVIApplicationManager>
+#include <iviapplicationmanager_p.h>
+#include <ivisingletonmanager_p.h>
+#include <iviappprocessmanager_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -29,7 +31,7 @@ IVIApplication::IVIApplication(const IVIManifest& manifest, QObject* parent)
 IVIApplication::IVIApplication(IVIApplicationPrivate& dd, QObject* parent)
     : QObject(dd, parent)
 {
-    IVIApplicationManager::registerApplication(this);
+    IVIApplicationManagerPrivate::registerApplication(this);
 }
 
 const QList<QWaylandIviSurface*>& IVIApplication::surfaces() const {
@@ -42,14 +44,56 @@ const QString& IVIApplication::getName() const {
     return d->name;
 }
 
+const QString& IVIApplication::getDescription() const {
+    Q_D(const IVIApplication);
+    return d->description;
+}
+
+const QString& IVIApplication::getIcon() const {
+    Q_D(const IVIApplication);
+    return d->icon;
+}
+
+const QString& IVIApplication::getWebsite() const {
+    Q_D(const IVIApplication);
+    return d->website;
+}
+
+const QList<QString>& IVIApplication::getCategories() const {
+    Q_D(const IVIApplication);
+    return d->categories;
+}
+
+const QString& IVIApplication::getExecutable() const {
+    Q_D(const IVIApplication);
+    return d->executable;
+}
+
+const QList<QString>& IVIApplication::getArguments() const {
+    Q_D(const IVIApplication);
+    return d->arguments;
+}
+
+const QString& IVIApplication::getWorkingDirectory() const {
+    Q_D(const IVIApplication);
+    return d->workingDirectory;
+}
+
+IVIApplication::RunningState IVIApplication::getRunningState() const {
+    Q_D(const IVIApplication);
+    return d->runningState;
+}
+
 IVIApplicationPrivate::IVIApplicationPrivate(const IVIManifest& manifest, IVIApplication*)
-    : name(manifest.getName())
+    : runningState(IVIApplication::RunningState::NotRunning)
+    , name(manifest.getName())
     , description(manifest.getDescription())
     , icon(manifest.getIcon())
     , website(manifest.getWebsite())
     , categories(manifest.getCategories())
     , executable(manifest.getExecutable())
     , arguments(manifest.getArguments())
+    , workingDirectory(QFileInfo(manifest.getFilename()).dir().absolutePath())
 {}
 
 static QString executingDirFromPID(qint64 PID)
@@ -92,8 +136,19 @@ IVIApplication* IVIApplication::fromWaylandClient(QWaylandClient* client) {
     return it->second;
 }
 
+void IVIApplication::launch() {
+    Q_D(IVIApplication);
+    if(d->runningState != IVIApplication::RunningState::NotRunning)
+        return;
+    d->runningState = IVIApplication::RunningState::Starting;
+    emit runningStateChanged();
+    IVISingletonManager::getAppProcessManager().launch(*this);
+}
+
 void IVIApplicationPrivate::addSurface(QWaylandIviSurface* iviSurface) {
     Q_Q(IVIApplication);
+    runningState = IVIApplication::RunningState::Running;
+    emit q->runningStateChanged();
     connect(iviSurface, &QWaylandIviSurface::destroyed, this, &IVIApplicationPrivate::handleIviSurfaceDestroy);
     surfaces.append(iviSurface);
     emit q->newSurface(iviSurface);

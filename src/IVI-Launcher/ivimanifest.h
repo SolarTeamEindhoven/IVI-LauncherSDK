@@ -31,6 +31,7 @@ public:
     const QList<QString>& getCategories() const {return categories;}
     const QString& getExecutable() const {return executable;}
     const QList<QString>& getArguments() const {return arguments;}
+    const QString& getFilename() const {return filename;}
 
 private:
     bool succes;
@@ -54,6 +55,7 @@ private:
         ArgumentState,
     } state;
 
+    QString filename;
     QString name;
     QString description;
     QString icon;
