@@ -5,12 +5,11 @@
 
 #include <QtCore/private/qobject_p.h>
 #include <QtWaylandCompositor/QWaylandIviApplication>
+#include <IVI-Launcher/ivisurfacemanager.h>
 
 QT_BEGIN_NAMESPACE
 
-class IVIAppContainer;
 class QWaylandIviSurface;
-class IVISurfaceManager;
 
 class Q_DECL_EXPORT IVISurfaceManagerPrivate : public QObjectPrivate
 {
@@ -19,15 +18,15 @@ public:
 
     void initialize();
 
-    void registerAppContainer(IVIAppContainer* appContainer);
-    void unregisterAppContainer(IVIAppContainer* appContainer);
+    void registerAppContainer(IVIAbstractAppContainer* appContainer);
+    void unregisterAppContainer(IVIAbstractAppContainer* appContainer);
 
 private:
     QWaylandIviApplication waylandIviApplication;
-    QList<IVIAppContainer*> appContainers;
+    QList<IVIAbstractAppContainer*> appContainers;
 
     std::mutex appContainerMapMutex;
-    std::multimap<qint64, IVIAppContainer*> appContainerMap;
+    std::multimap<qint64, IVIAbstractAppContainer*> appContainerMap;
 
     void handleIviSurfaceCreated(QWaylandIviSurface* iviSurface);
 

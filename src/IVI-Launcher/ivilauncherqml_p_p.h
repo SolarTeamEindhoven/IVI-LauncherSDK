@@ -8,6 +8,7 @@
 
 QT_BEGIN_NAMESPACE
 
+/*
 class IVILauncherQML;
 
 class Q_IVI_LAUNCHER_EXPORT IVILauncherQMLPrivate : public QQuickWindowPrivate
@@ -23,6 +24,7 @@ private:
     Q_DECLARE_PUBLIC(IVILauncherQML)
     Q_DISABLE_COPY(IVILauncherQMLPrivate)
 };
+*/
 
 QT_END_NAMESPACE
 

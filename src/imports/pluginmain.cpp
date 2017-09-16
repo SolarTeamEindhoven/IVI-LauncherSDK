@@ -27,12 +27,13 @@
 **
 ****************************************************************************/
 #include <IVI-Launcher/IVIAppContainer>
-#include <IVI-Launcher/private/ivilauncherqml_p.h>
+//#include <IVI-Launcher/private/ivilauncherqml_p.h>
 #include <IVI-Launcher/IVIApplication>
 #include <IVI-Launcher/IVIApplicationManager>
 #include <QtQml>
 
 #include "iviapplicationmanagerqml.h"
+#include "iviappcontainerqml.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -46,10 +47,9 @@ public:
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("ivi.launcher"));
 
-        qmlRegisterType<IVIAppContainer>(uri, 1, 0, "AppContainer");
-        qmlRegisterUncreatableType<IVIApplication>(uri, 1, 0, "Application", "Applications can be craete only using an application manager");
+        qmlRegisterType<IVIAppContainerQml>(uri, 1, 0, "AppContainer");
+        qmlRegisterUncreatableType<IVIApplication>(uri, 1, 0, "Application", "Applications can be created only using an application manager");
         qmlRegisterType<IVIApplicationManagerQML>(uri, 1, 0, "ApplicationManager");
-        qmlRegisterType<IVILauncherQML>(uri, 1, 0, "Launcher");
     }
 };
 

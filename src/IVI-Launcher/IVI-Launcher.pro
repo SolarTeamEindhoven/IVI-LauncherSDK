@@ -32,7 +32,8 @@ HEADERS += \
     ivilauncherqml_p.h \
     ividbusmanager_p.h \
     ivivehicleinteractionbackendfactory_p.h \
-    iviappprocessmanager_p.h
+    iviappprocessmanager_p.h \
+    iviabstractappcontainer.h
 
 SOURCES += \
     iviappcontainer.cpp \
@@ -49,6 +50,7 @@ SOURCES += \
     qwaylandquickcompositorquickextensioncontainer.cpp \
     ivilauncherqml.cpp \
     ividbusmanager.cpp \
-    iviappprocessmanager.cpp
+    iviappprocessmanager.cpp \
+    iviabstractappcontainer.cpp
 
 DBUS_ADAPTORS += ../protocol/DBUSManager.xml ../protocol/DBUSVehicleData.xml ../protocol/DBUSVehicleSetting.xml

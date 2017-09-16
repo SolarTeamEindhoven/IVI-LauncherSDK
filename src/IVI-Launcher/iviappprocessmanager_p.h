@@ -17,14 +17,16 @@ class IVIAppProcessManager : public QObject
     Q_OBJECT
 
 public:
-    explicit IVIAppProcessManager(QObject* parent = nullptr);
-    ~IVIAppProcessManager();
-
     qint64 launch(IVIApplication&);
+
+    static IVIAppProcessManager& getInstance();
 
 private:
     QProcessEnvironment env;
     QList<QProcess*> processes;
+
+    explicit IVIAppProcessManager(QObject* parent = nullptr);
+    ~IVIAppProcessManager();
 
     void handleProcessFinished(int);
 };

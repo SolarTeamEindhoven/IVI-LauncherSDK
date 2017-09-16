@@ -7,6 +7,7 @@
 
 QT_BEGIN_NAMESPACE
 
+/*
 class IVILauncherQMLPrivate;
 
 class Q_IVI_LAUNCHER_EXPORT IVILauncherQML : public QQuickWindow
@@ -17,6 +18,7 @@ class Q_IVI_LAUNCHER_EXPORT IVILauncherQML : public QQuickWindow
 public:
     explicit IVILauncherQML(QWindow* parent = nullptr);
 };
+*/
 
 QT_END_NAMESPACE
 

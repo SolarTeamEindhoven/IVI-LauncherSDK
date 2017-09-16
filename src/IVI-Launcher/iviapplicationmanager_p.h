@@ -17,7 +17,6 @@ public:
     void initialize();
 
     static void registerApplication(IVIApplication*);
-    static IVIApplicationManager& createIVIApplicationManagerPrivate(QObject* parent = nullptr);
     static Q_IVI_LAUNCHER_EXPORT const QList<IVIApplication*>& getApplications() noexcept;
 
 signals:

@@ -3,7 +3,11 @@
 
 #include <QtWaylandCompositor/QWaylandCompositor>
 
+#include <IVI-Launcher/ivilauncherglobal.h>
+
 QT_BEGIN_NAMESPACE
+
+class QQuickWindow;
 
 class IVISurfaceManager;
 class IVIAppProcessManager;
@@ -11,17 +15,10 @@ class IVIApplicationManager;
 
 namespace IVISingletonManager
 {
-    enum class IVIGraphicsEngine {
-        WIDGETS,
-        QML
-    };
-
-    bool initialize(IVIGraphicsEngine engine) noexcept;
+    Q_IVI_LAUNCHER_EXPORT void createQmlCompositor(QQuickWindow*) noexcept;
 
     QWaylandCompositor& getCompositor() noexcept;
     IVISurfaceManager& getSurfaceManager() noexcept;
-    IVIApplicationManager& getApplicationManager() noexcept;
-    IVIAppProcessManager& getAppProcessManager() noexcept;
 };
 
 QT_END_NAMESPACE

@@ -7,7 +7,7 @@ import QtGraphicalEffects 1.0
 
 import ivi.launcher 1.0
 
-Launcher {
+ApplicationWindow {
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
     visible: true

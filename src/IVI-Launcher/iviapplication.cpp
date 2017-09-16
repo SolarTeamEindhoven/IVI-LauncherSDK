@@ -142,7 +142,7 @@ void IVIApplication::launch() {
         return;
     d->runningState = IVIApplication::RunningState::Starting;
     emit runningStateChanged();
-    IVISingletonManager::getAppProcessManager().launch(*this);
+    IVIAppProcessManager::getInstance().launch(*this);
 }
 
 void IVIApplicationPrivate::addSurface(QWaylandIviSurface* iviSurface) {

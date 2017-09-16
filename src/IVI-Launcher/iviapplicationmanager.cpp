@@ -31,7 +31,8 @@ QList<IVIApplication*> IVIApplicationManager::getApplicationList() const {
 }
 
 IVIApplicationManager& IVIApplicationManager::getInstance() {
-    return IVISingletonManager::getApplicationManager();
+    static IVIApplicationManager applicationManager;
+    return applicationManager;
 }
 
 IVIApplicationManagerPrivate::IVIApplicationManagerPrivate()
@@ -66,16 +67,11 @@ void IVIApplicationManagerPrivate::initialize() {
 }
 
 void IVIApplicationManagerPrivate::registerApplication(IVIApplication* application) {
-    IVISingletonManager::getApplicationManager().d_func()->handleApplicationRegistration(application);
-}
-
-IVIApplicationManager& IVIApplicationManagerPrivate::createIVIApplicationManagerPrivate(QObject* parent) {
-    static IVIApplicationManager applicationManager(parent);
-    return applicationManager;
+    IVIApplicationManager::getInstance().d_func()->handleApplicationRegistration(application);
 }
 
 const QList<IVIApplication*>& IVIApplicationManagerPrivate::getApplications() noexcept {
-    return IVISingletonManager::getApplicationManager().d_func()->applications;
+    return IVIApplicationManager::getInstance().d_func()->applications;
 }
 
 void IVIApplicationManagerPrivate::handleApplicationRegistration(IVIApplication* application) {

@@ -7,7 +7,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class IVIAppContainer;
+class IVIAbstractAppContainer;
 class IVISurfaceManagerPrivate;
 
 class QWaylandIviSurface;
@@ -21,8 +21,8 @@ class Q_IVI_LAUNCHER_EXPORT IVISurfaceManager : public QObject
 public:
     explicit IVISurfaceManager(QWaylandCompositor* compositor, QObject* parent = nullptr);
 
-    void registerAppContainer(IVIAppContainer* appContainer);
-    void unregisterAppContainer(IVIAppContainer* appContainer);
+    void registerAppContainer(IVIAbstractAppContainer* appContainer);
+    void unregisterAppContainer(IVIAbstractAppContainer* appContainer);
 };
 
 QT_END_NAMESPACE

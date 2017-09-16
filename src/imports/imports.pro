@@ -6,11 +6,13 @@ IMPORT_VERSION = 1.0
 QT += qml IVI-Launcher IVI-Launcher-private
 
 SOURCES += pluginmain.cpp \
-    iviapplicationmanagerqml.cpp
+    iviapplicationmanagerqml.cpp \
+    iviappcontainerqml.cpp
 
 OTHER_FILES += qmldir
 
 load(qml_plugin)
 
 HEADERS += \
-    iviapplicationmanagerqml.h
+    iviapplicationmanagerqml.h \
+    iviappcontainerqml.h

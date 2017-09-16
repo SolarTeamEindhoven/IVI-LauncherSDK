@@ -1,4 +1,3 @@
-#include "ivisurfacemanager.h"
 #include "ivisurfacemanager_p.h"
 
 #include <QtWaylandCompositor/QWaylandSurface>
@@ -28,21 +27,21 @@ void IVISurfaceManagerPrivate::initialize() {
     connect(&waylandIviApplication, &QWaylandIviApplication::iviSurfaceCreated, this, &IVISurfaceManagerPrivate::handleIviSurfaceCreated);
 }
 
-void IVISurfaceManager::registerAppContainer(IVIAppContainer* appContainer) {
+void IVISurfaceManager::registerAppContainer(IVIAbstractAppContainer* appContainer) {
     Q_D(IVISurfaceManager);
     d->registerAppContainer(appContainer);
 }
 
-void IVISurfaceManager::unregisterAppContainer(IVIAppContainer* appContainer) {
+void IVISurfaceManager::unregisterAppContainer(IVIAbstractAppContainer* appContainer) {
     Q_D(IVISurfaceManager);
     d->unregisterAppContainer(appContainer);
 }
 
-void IVISurfaceManagerPrivate::registerAppContainer(IVIAppContainer* appContainer) {
+void IVISurfaceManagerPrivate::registerAppContainer(IVIAbstractAppContainer* appContainer) {
     appContainers.append(appContainer);
 }
 
-void IVISurfaceManagerPrivate::unregisterAppContainer(IVIAppContainer* appContainer) {
+void IVISurfaceManagerPrivate::unregisterAppContainer(IVIAbstractAppContainer* appContainer) {
     appContainers.removeAll(appContainer);
 }
 

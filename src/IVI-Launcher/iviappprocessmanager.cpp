@@ -23,6 +23,11 @@ IVIAppProcessManager::~IVIAppProcessManager() {
     }
 }
 
+IVIAppProcessManager& IVIAppProcessManager::getInstance() {
+    static IVIAppProcessManager appProcessManager;
+    return appProcessManager;
+}
+
 qint64 IVIAppProcessManager::launch(IVIApplication& application) {
     auto process = new QProcess();
     process->setProcessEnvironment(env);

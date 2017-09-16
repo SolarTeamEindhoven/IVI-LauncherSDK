@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <QtWaylandCompositor/QWaylandTextInputManager>
+#include <QWaylandQuickOutput>
 #include <QDebug>
 
 #include "qwaylandquickcompositorquickextensioncontainer_p.h"
@@ -15,120 +16,69 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-class SingletonFactory {
-public:
-    enum class IVIGraphics {
-        UNDEFINED,
-        WIDGETS,
-        QML
-    };
+enum class CompositorType {
+    Invalid,
+    Wigets,
+    QML
+};
 
-    SingletonFactory(IVIGraphics engine) noexcept
-        : engine(toIVIGraphicsEngine(engine))
-        , compositor(createCompositor(engine))
+struct CompositorWrapper {
+    CompositorWrapper(CompositorType type)
+        : type(type)
+        , compositor(createCompositor(type))
         , textInputManager(compositor.get())
         , surfaceManager(compositor.get())
-        , applicationManager(IVIApplicationManagerPrivate::createIVIApplicationManagerPrivate())
     {}
 
-    IVIGraphics getEngine() const {
-       switch(engine) {
-       case IVISingletonManager::IVIGraphicsEngine::WIDGETS:
-           return IVIGraphics::WIDGETS;
-       case IVISingletonManager::IVIGraphicsEngine::QML:
-           return IVIGraphics::QML;
-       }
-    }
-
-    QWaylandCompositor& getCompositor() const noexcept {
-        return *compositor.get();
-    }
-
-    IVISurfaceManager& getSurfaceManager() noexcept {
-        return surfaceManager;
-    }
-
-    IVIApplicationManager& getApplicationManager() noexcept {
-        return applicationManager;
-    }
-
-    IVIAppProcessManager& getAppProcessManager() noexcept {
-        return appProcessManager;
-    }
-
-private:
-    const IVISingletonManager::IVIGraphicsEngine engine;
+    const CompositorType type;
     std::unique_ptr<QWaylandCompositor> compositor;
     QWaylandTextInputManager textInputManager;
     IVISurfaceManager surfaceManager;
-    IVIDBusManager iviDBusManager;
-    IVIApplicationManager& applicationManager;
-    IVIAppProcessManager appProcessManager;
 
-    static constexpr IVISingletonManager::IVIGraphicsEngine
-    toIVIGraphicsEngine(IVIGraphics graphicsEngine) {
-        switch(graphicsEngine) {
-        case IVIGraphics::UNDEFINED:
-            return IVISingletonManager::IVIGraphicsEngine::WIDGETS;
-        case IVIGraphics::WIDGETS:
-            return IVISingletonManager::IVIGraphicsEngine::WIDGETS;
-        case IVIGraphics::QML:
-            return IVISingletonManager::IVIGraphicsEngine::QML;
-        }
-    }
-
-    static std::unique_ptr<QWaylandCompositor> createCompositor(IVIGraphics engine) {
-        if(engine == IVIGraphics::UNDEFINED)
-            qWarning() << "Creating Singletons of undefined type! Defaulting to widgets";
-        else {
-            switch(engine) {
-            case IVIGraphics::WIDGETS:
-                return std::make_unique<QWaylandQuickCompositorQuickExtensionContainer>(); // TODO
-            case IVIGraphics::QML:
-                return std::make_unique<QWaylandQuickCompositorQuickExtensionContainer>();
-            }
+private:
+    static QWaylandCompositor* createCompositor(CompositorType type) {
+        switch(type) {
+        default:
+            qWarning() << "Using compositor before explicitly specifying compositor type. Default to widgets!";
+            [[fallthrough]];
+        case CompositorType::Wigets:
+            return nullptr; // TODO
+        case CompositorType::QML:
+            return new QWaylandQuickCompositorQuickExtensionContainer();
         }
     }
 };
 
-static SingletonFactory& getSingletonFactory(SingletonFactory::IVIGraphics engine) {
-    static SingletonFactory factory(engine);
-    if(engine != SingletonFactory::IVIGraphics::UNDEFINED && factory.getEngine() != engine)
-        qFatal("Incorrect singleton initialization!");
-    return factory;
+static CompositorWrapper& getCompositorWrapper(CompositorType defaultType) {
+    static CompositorWrapper compositorWrapper(defaultType);
+    return compositorWrapper;
 }
 
-static inline SingletonFactory& fetchSingletonFactory() {
-    return getSingletonFactory(SingletonFactory::IVIGraphics::UNDEFINED);
-}
 }
 
-bool IVISingletonManager::initialize(IVIGraphicsEngine engine) noexcept {
-    switch(engine) {
-    case IVIGraphicsEngine::WIDGETS:
-        getSingletonFactory(SingletonFactory::IVIGraphics::WIDGETS);
-        break;
-    case IVIGraphicsEngine::QML:
-        getSingletonFactory(SingletonFactory::IVIGraphics::QML);
-        break;
+void IVISingletonManager::createQmlCompositor(QQuickWindow* window) noexcept {
+    auto& compositorWrapper = getCompositorWrapper(CompositorType::QML);
+
+    if(window == nullptr)
+        return;
+
+    if(compositorWrapper.type != CompositorType::QML)
+        return;
+
+    if(compositorWrapper.compositor->outputFor(window) == nullptr) {
+        QWaylandQuickOutput* output = new QWaylandQuickOutput(compositorWrapper.compositor.get(), window);
+        output->setSizeFollowsWindow(true);
     }
-    return false;
 }
 
 QWaylandCompositor& IVISingletonManager::getCompositor() noexcept {
-    return fetchSingletonFactory().getCompositor();
+    auto& compositorWrapper = getCompositorWrapper(CompositorType::Invalid);
+    return *compositorWrapper.compositor;
 }
 
 IVISurfaceManager& IVISingletonManager::getSurfaceManager() noexcept {
-    return fetchSingletonFactory().getSurfaceManager();
-}
-
-IVIApplicationManager& IVISingletonManager::getApplicationManager() noexcept {
-    return fetchSingletonFactory().getApplicationManager();
-}
-
-IVIAppProcessManager& IVISingletonManager::getAppProcessManager() noexcept {
-    return fetchSingletonFactory().getAppProcessManager();
+    auto& compositorWrapper = getCompositorWrapper(CompositorType::Invalid);
+    return compositorWrapper.surfaceManager;
 }
 
 QT_END_NAMESPACE

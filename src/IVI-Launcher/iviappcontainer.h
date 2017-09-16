@@ -4,6 +4,7 @@
 #include <QtQuick/QQuickItem>
 
 #include <IVI-Launcher/ivilauncherglobal.h>
+#include <IVI-Launcher/IVIAbstractAppContainer>
 
 QT_BEGIN_NAMESPACE
 
@@ -11,7 +12,11 @@ class QWaylandIviSurface;
 class QWaylandQuickShellSurfaceItem;
 class IVIApplication;
 
-class Q_IVI_LAUNCHER_EXPORT IVIAppContainer : public QQuickItem
+/*
+ * TODO: Convert to widget version
+ */
+
+class Q_IVI_LAUNCHER_EXPORT IVIAppContainer : public QQuickItem, public IVIAbstractAppContainer
 {
     Q_OBJECT
     Q_PROPERTY(IVIApplication* application READ getApplication WRITE setApplication NOTIFY applicationChanged)
@@ -23,6 +28,8 @@ public:
     IVIApplication* getApplication() const;
     void setApplication(IVIApplication*);
 
+    void handleNewSurface(QWaylandIviSurface* iviSurface) override;
+
 signals:
     void applicationChanged();
 
@@ -30,7 +37,6 @@ private:
     QList<QWaylandQuickShellSurfaceItem*> waylandQuickShellSurfaceItems;
     IVIApplication* application;
 
-    void handleNewSurface(QWaylandIviSurface* iviSurface);
     void handleWidthChanged();
     void handleHeightChanged();
     void handleSurfaceResize();
