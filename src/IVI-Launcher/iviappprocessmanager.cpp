@@ -1,6 +1,7 @@
 #include "iviappprocessmanager_p.h"
 
 #include <QDir>
+#include <QDebug>
 
 #include "iviapplication.h"
 
@@ -44,10 +45,12 @@ qint64 IVIAppProcessManager::launch(IVIApplication& application) {
     return process->processId();
 }
 
-void IVIAppProcessManager::handleProcessFinished(int /*exitCode*/) {
+void IVIAppProcessManager::handleProcessFinished(int exitCode) {
     QProcess* process = qobject_cast<QProcess*>(sender());
     if(process == nullptr)
         return;
+
+    qDebug() << "Process" << process->processId() << "finished with exit code:" << exitCode;
 
     processes.removeOne(process);
     process->deleteLater();

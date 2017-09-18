@@ -1,10 +1,14 @@
 #include "iviapplicationmanagerqml.h"
 
 #include <IVI-Launcher/private/iviapplicationmanager_p.h>
+#include <IVI-Launcher/private/ivisingletonmanager_p.h>
 
 IVIApplicationManagerQML::IVIApplicationManagerQML(QObject *parent)
     : QObject(parent)
-{}
+{
+    IVISingletonManager::createQmlCompositor(nullptr);
+    connect(&IVIApplicationManager::getInstance(), &IVIApplicationManager::applicationListChanged, this, &IVIApplicationManagerQML::applicationListChanged);
+}
 
 namespace {
 static int CountFunction(QQmlListProperty<IVIApplication>*) {

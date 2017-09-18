@@ -30,9 +30,7 @@ IVIApplication::IVIApplication(const IVIManifest& manifest, QObject* parent)
 
 IVIApplication::IVIApplication(IVIApplicationPrivate& dd, QObject* parent)
     : QObject(dd, parent)
-{
-    IVIApplicationManagerPrivate::registerApplication(this);
-}
+{}
 
 const QList<QWaylandIviSurface*>& IVIApplication::surfaces() const {
     Q_D(const IVIApplication);
@@ -84,7 +82,7 @@ IVIApplication::RunningState IVIApplication::getRunningState() const {
     return d->runningState;
 }
 
-IVIApplicationPrivate::IVIApplicationPrivate(const IVIManifest& manifest, IVIApplication*)
+IVIApplicationPrivate::IVIApplicationPrivate(const IVIManifest& manifest, IVIApplication* application)
     : runningState(IVIApplication::RunningState::NotRunning)
     , name(manifest.getName())
     , description(manifest.getDescription())
@@ -94,7 +92,9 @@ IVIApplicationPrivate::IVIApplicationPrivate(const IVIManifest& manifest, IVIApp
     , executable(manifest.getExecutable())
     , arguments(manifest.getArguments())
     , workingDirectory(QFileInfo(manifest.getFilename()).dir().absolutePath())
-{}
+{
+    manifestFiles.insert(manifest.getFilename(), application);
+}
 
 static QString executingDirFromPID(qint64 PID)
 {
@@ -103,7 +103,7 @@ static QString executingDirFromPID(qint64 PID)
 }
 
 IVIApplication* IVIApplication::fromWaylandClient(QWaylandClient* client) {
-    static bool debugMode = qEnvironmentVariableIsSet("STE_ENABLE_DEBUG");
+    static bool debugMode = qEnvironmentVariableIsSet("IVI_ENABLE_DEBUG");
 
     auto processId = client->processId();
 
@@ -115,8 +115,10 @@ IVIApplication* IVIApplication::fromWaylandClient(QWaylandClient* client) {
             return nullptr;
 
         QDir dir(executingDirFromPID(processId));
-        if(!dir.exists(QStringLiteral("MANIFEST")))
+        if(!dir.exists(QStringLiteral("MANIFEST"))) {
+            qWarning() << "Failed to find manifest file at:" << dir.filePath(QStringLiteral("MANIFEST"));
             return nullptr;
+        }
 
         auto manifestFile = dir.filePath(QStringLiteral("MANIFEST"));
         const auto it2 = manifestFiles.find(manifestFile);
@@ -124,12 +126,15 @@ IVIApplication* IVIApplication::fromWaylandClient(QWaylandClient* client) {
             return it2.value();
 
         IVIManifest manifest(manifestFile);
-        if(!manifest.isSuccesful())
+        if(!manifest.isSuccesful()) {
+            qWarning() << "Failed to parse manifest file at path:" << dir.filePath(QStringLiteral("MANIFEST"));
             return nullptr;
+        }
 
         IVIApplication* application = new IVIApplication(manifest);
+        application->d_func()->runningState = IVIApplication::RunningState::Background;
         IVIApplicationMap.insert({processId, application});
-        manifestFiles.insert(manifestFile, application);
+        IVIApplicationManagerPrivate::registerApplication(application);
         return application;
     }
 

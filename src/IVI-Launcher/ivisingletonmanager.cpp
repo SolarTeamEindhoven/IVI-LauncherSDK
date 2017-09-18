@@ -1,6 +1,7 @@
 #include "ivisingletonmanager_p.h"
 
 #include <memory>
+#include <unordered_set>
 
 #include <QtWaylandCompositor/QWaylandTextInputManager>
 #include <QWaylandQuickOutput>
@@ -24,16 +25,20 @@ enum class CompositorType {
 
 struct CompositorWrapper {
     CompositorWrapper(CompositorType type)
-        : type(type)
+        : compositorIsCreated(false)
+        , type(type)
         , compositor(createCompositor(type))
         , textInputManager(compositor.get())
         , surfaceManager(compositor.get())
     {}
 
+    bool compositorIsCreated;
     const CompositorType type;
     std::unique_ptr<QWaylandCompositor> compositor;
     QWaylandTextInputManager textInputManager;
     IVISurfaceManager surfaceManager;
+    IVIDBusManager dBusManager;
+    std::unordered_set<QWindow*> outputWindows;
 
 private:
     static QWaylandCompositor* createCompositor(CompositorType type) {
@@ -44,7 +49,11 @@ private:
         case CompositorType::Wigets:
             return nullptr; // TODO
         case CompositorType::QML:
-            return new QWaylandQuickCompositorQuickExtensionContainer();
+            {
+                QWaylandQuickCompositorQuickExtensionContainer* compositor = new QWaylandQuickCompositorQuickExtensionContainer();
+                compositor->create();
+                return compositor;
+            }
         }
     }
 };
@@ -65,9 +74,11 @@ void IVISingletonManager::createQmlCompositor(QQuickWindow* window) noexcept {
     if(compositorWrapper.type != CompositorType::QML)
         return;
 
-    if(compositorWrapper.compositor->outputFor(window) == nullptr) {
+    if(compositorWrapper.outputWindows.find(window) == compositorWrapper.outputWindows.end()) {
         QWaylandQuickOutput* output = new QWaylandQuickOutput(compositorWrapper.compositor.get(), window);
         output->setSizeFollowsWindow(true);
+        compositorWrapper.compositor;
+        compositorWrapper.outputWindows.insert(window);
     }
 }
 

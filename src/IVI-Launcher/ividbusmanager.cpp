@@ -56,9 +56,9 @@ void IVIDBusManager::loadBackends()
 
     if (!keys.isEmpty()) {
         QStringList requestedKeys;
-        if(qEnvironmentVariableIsSet("STE_VEHICLE_INTERACTION_BACKENDS"))
+        if(qEnvironmentVariableIsSet("IVI_VEHICLE_INTERACTION_BACKENDS"))
         {
-            QString requestedKeyList = QString::fromUtf8(qgetenv("STE_VEHICLE_INTERACTION_BACKENDS"));
+            QString requestedKeyList = QString::fromUtf8(qgetenv("IVI_VEHICLE_INTERACTION_BACKENDS"));
             requestedKeys = requestedKeyList.split(':');
         }
         else

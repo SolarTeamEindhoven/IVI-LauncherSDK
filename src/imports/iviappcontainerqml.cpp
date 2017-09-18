@@ -32,6 +32,7 @@ void IVIAppContainerQml::setApplication(IVIApplication* newApplication) {
 
     if(application != nullptr) {
         disconnect(application, &IVIApplication::newSurface, this, &IVIAppContainerQml::handleNewSurface);
+        disconnect(application, &IVIApplication::runningStateChanged, this, &IVIAppContainerQml::runningStateChanged);
         foreach(QWaylandQuickShellSurfaceItem* surfaceItem, waylandQuickShellSurfaceItems) {
             surfaceItem->deleteLater();
         }
@@ -40,15 +41,67 @@ void IVIAppContainerQml::setApplication(IVIApplication* newApplication) {
 
     application = newApplication;
     connect(application, &IVIApplication::newSurface, this, &IVIAppContainerQml::handleNewSurface);
+    connect(application, &IVIApplication::runningStateChanged, this, &IVIAppContainerQml::runningStateChanged);
 
     foreach(QWaylandIviSurface* surface, application->surfaces()) {
         handleNewSurface(surface);
     }
+
+    emit applicationChanged();
+    emit runningStateChanged();
+}
+
+namespace {
+    static QString emptyString;
+    static QList<QString> emptyCategories;
+}
+
+const QString& IVIAppContainerQml::getName() const {
+    if(application == nullptr)
+        return emptyString;
+    return application->getName();
+}
+
+const QString& IVIAppContainerQml::getDescription() const {
+    if(application == nullptr)
+        return emptyString;
+    return application->getDescription();
+}
+
+const QString& IVIAppContainerQml::getIcon() const {
+    if(application == nullptr)
+        return emptyString;
+    return application->getIcon();
+}
+
+const QString& IVIAppContainerQml::getWebsite() const {
+    if(application == nullptr)
+        return emptyString;
+    return application->getWebsite();
+}
+
+const QList<QString>& IVIAppContainerQml::getCategories() const {
+    if(application == nullptr)
+        return emptyCategories;
+    return application->getCategories();
+}
+
+const QString& IVIAppContainerQml::getExecutable() const {
+    if(application == nullptr)
+        return emptyString;
+    return application->getExecutable();
+}
+
+IVIApplication::RunningState IVIAppContainerQml::getRunningState() const {
+    if(application == nullptr)
+        return IVIApplication::RunningState::NotRunning;
+    return application->getRunningState();
 }
 
 void IVIAppContainerQml::handleNewSurface(QWaylandIviSurface* iviSurface) {
     if(iviSurface == nullptr)
         return;
+    qDebug() << "Adding surface to application container!";
 
     QWaylandQuickShellSurfaceItem* waylandQuickShellSurfaceItem = new QWaylandQuickShellSurfaceItem(this);
     QObject::connect(waylandQuickShellSurfaceItem, &QWaylandQuickShellSurfaceItem::widthChanged, this, &IVIAppContainerQml::handleSurfaceResize);

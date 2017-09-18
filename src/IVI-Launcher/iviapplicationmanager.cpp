@@ -12,7 +12,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-    static QString defaultApplicationsDirectoryName("/usr/share/IVI/apps");
+    static QString defaultApplicationsDirectoryName("/usr/share/ivi/apps");
 }
 
 IVIApplicationManager::IVIApplicationManager(QObject* parent)
@@ -44,6 +44,8 @@ IVIApplicationManagerPrivate::~IVIApplicationManagerPrivate() {
 }
 
 void IVIApplicationManagerPrivate::initialize() {
+    Q_Q(IVIApplicationManager);
+
     QString directoryName = defaultApplicationsDirectoryName;
 
     if(qEnvironmentVariableIsSet("IVI_APP_PATH"))
@@ -52,6 +54,7 @@ void IVIApplicationManagerPrivate::initialize() {
     QDir directory(directoryName);
     directory.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
     QDirIterator it(directory, QDirIterator::FollowSymlinks);
+    bool applicationsChanged = false;
     while(it.hasNext())
     {
         QDir dir(it.next());
@@ -62,8 +65,13 @@ void IVIApplicationManagerPrivate::initialize() {
         if(!manifest.isSuccesful())
             continue;
 
-        new IVIApplication(manifest);
+        IVIApplication* application = new IVIApplication(manifest);
+        applications.append(application);
+        applicationsChanged = true;
     }
+
+    if(applicationsChanged)
+        QTimer::singleShot(0, q, &IVIApplicationManager::applicationListChanged);
 }
 
 void IVIApplicationManagerPrivate::registerApplication(IVIApplication* application) {

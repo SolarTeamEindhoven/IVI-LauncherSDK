@@ -61,20 +61,20 @@ ApplicationWindow {
             }
         }
 
-        Row {
+        Column {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: keyboard.top
-            property real containerWidth: width / Math.max(appRepeater.count, 1)
+            property real containerHeight: height / Math.max(appRepeater.count, 1)
 
             Repeater {
                 id: appRepeater
                 model: applicationManager.applications
 
                 Rectangle {
-                    height: parent.height
-                    width: parent.containerWidth
+                    width: parent.width
+                    height: parent.containerHeight
                     color: (index % 2 == 0) ? "cornflowerblue" : "burlywood"
                     Text {
                         anchors.centerIn: parent
@@ -84,6 +84,10 @@ ApplicationWindow {
                     AppContainer {
                         anchors.fill: parent
                         application: model.modelData
+
+                        Component.onCompleted: {
+                            application.launch()
+                        }
                     }
                 }
             }
