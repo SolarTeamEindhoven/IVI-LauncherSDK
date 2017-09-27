@@ -9,17 +9,19 @@
 #include <IVI-Launcher/ivilauncherglobal.h>
 #include "dbusvehiclesetting_adaptor.h"
 
-QT_BEGIN_NAMESPACE
+#include "ivivehiclesetting.h"
 
-class IVIVehicleSetting;
+QT_BEGIN_NAMESPACE
 
 class IVIVehicleSettingPrivate : public QObjectPrivate
 {
 public:
-    IVIVehicleSettingPrivate(IVIVehicleSetting*);
+    IVIVehicleSettingPrivate();
+
+    void initialize(IVIVehicleSetting*);
 
 private:
-    VehiclesettingAdaptor adaptor;
+    std::unique_ptr<VehiclesettingAdaptor> adaptor;
 
     Q_DECLARE_PUBLIC(IVIVehicleSetting)
     Q_DISABLE_COPY(IVIVehicleSettingPrivate)
