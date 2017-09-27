@@ -101,7 +101,6 @@ IVIApplication::RunningState IVIAppContainerQml::getRunningState() const {
 void IVIAppContainerQml::handleNewSurface(QWaylandIviSurface* iviSurface) {
     if(iviSurface == nullptr)
         return;
-    qDebug() << "Adding surface to application container!";
 
     QWaylandQuickShellSurfaceItem* waylandQuickShellSurfaceItem = new QWaylandQuickShellSurfaceItem(this);
     QObject::connect(waylandQuickShellSurfaceItem, &QWaylandQuickShellSurfaceItem::widthChanged, this, &IVIAppContainerQml::handleSurfaceResize);
