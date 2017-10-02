@@ -1,2 +1,4 @@
 module ivi.launcher
 plugin IVILauncherPlugin
+classname IVILauncherPlugin
+typeinfo plugins.qmltypes

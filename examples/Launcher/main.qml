@@ -79,11 +79,11 @@ ApplicationWindow {
                     Text {
                         anchors.centerIn: parent
                         font.pixelSize: 30
-                        text: "App " + (index + 1) + "\nName: " + model.modelData.name
+                        text: "App " + (index + 1) + "\nName: " + model.name
                     }
                     AppContainer {
                         anchors.fill: parent
-                        application: model.modelData
+                        application: model.application
 
                         Component.onCompleted: {
                             application.launch()

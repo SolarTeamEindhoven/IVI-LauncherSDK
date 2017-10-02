@@ -4,6 +4,7 @@ TARGETPATH = ivi/launcher/
 IMPORT_VERSION = 1.0
 
 QT += qml IVI-Launcher IVI-Launcher-private
+CONFIG += C++11
 
 SOURCES += pluginmain.cpp \
     iviapplicationmanagerqml.cpp \
