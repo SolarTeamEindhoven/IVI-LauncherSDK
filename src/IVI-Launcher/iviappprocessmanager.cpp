@@ -15,6 +15,7 @@ IVIAppProcessManager::IVIAppProcessManager(QObject* parent)
     env.insert("QT_WAYLAND_SHELL_INTEGRATION", "ivi-shell");
     env.insert("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
     env.insert("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", "1");
+    env.insert("LD_PRELOAD", "/usr/lib/libEGL.so.1"); // TODO: Temp work-around for wqtwebeingine bug.
 }
 
 IVIAppProcessManager::~IVIAppProcessManager() {
